@@ -208,3 +208,5 @@ __marimo__/
 
 
 backend/venv
+
+.DS_Store
