@@ -7,6 +7,9 @@ import pandas as pd
 import aiohttp
 import aiofiles
 import re 
+import nutritional_info_vlm
+import product_info_llm
+import json 
 
 
 CONCURRENCY = 1 
@@ -63,6 +66,10 @@ async def download_image(image_url: str, save_folder: str, filename: str):
         print(f"❌ Error downloading image {image_url}: {e}")
         return None
     
+
+async def get_item_weight(weight): 
+    ...
+    
 async def get_categories(page: Page): 
     item_info = []
     await asyncio.sleep(random.uniform(1, 3))
@@ -108,32 +115,60 @@ async def get_items(page: Page, category: str, subcategory: str):
             item_url = page.url
             item_id = re.search(r"/(\d+)/", item_url).group(1)
             item_locator = page.locator("div.private-product-detail__content")
-            item_description = await item_locator.locator("div.private-product-detail__left").get_attribute("aria-label")
+            item_description_locator = item_locator.locator("div.private-product-detail__left")
+            item_description = await item_description_locator.get_attribute("aria-label")
             item_title = await item_locator.locator("h1.private-product-detail__description").inner_text()
             item_size = await item_locator.locator("div.product-format__size").get_attribute("aria-label")
             item_price = await item_locator.locator("[data-testid='product-price']").first.inner_text()
-            image_url = item_locator.locator("div.thumbnail__container")
+            image_button = item_locator.locator("button.product-gallery__thumbnail")
             filenames = []
-            image_url_count = await image_url.count()
-            for i in range(image_url_count): 
-                img = await image_url.nth(i).locator("img").get_attribute("src")
+            image_button_count = await image_button.count()
+            for i in range(image_button_count): 
+                await image_button.nth(i).click()
+                await asyncio.sleep(random.uniform(0.5, 1.5))
+                img = await item_description_locator.locator("[data-testid='image-zoomer-container'] img").get_attribute("src")
+                print(img)
                 filename = f"{i}.jpg"
-                await download_image(img, f"../images/{subsection_name}{item_id}/", filename)
+                folder_imgs = f"../images/{subsection_name}{item_id}/"
+                await download_image(img, folder_imgs, filename)
                 filenames.append(filename)
-            #Añadir el hecho de procesar las imagenes en edge. 
+
+            loop = asyncio.get_running_loop()
+            nutr_info = await loop.run_in_executor(None, nutritional_info_vlm.parse_images, folder_imgs)
+            item_description_splitted = item_description.split("..")
+            item_weight, item_price_measurement = item_size.split("|")
+            item_price_measurement = await re.match(r"\d+,\d+", item_price_measurement)
+            item_price_measurement = float(item_price_measurement.match(1))
+            item_weight = await get_item_weight(item_weight)
+            if len(item_description_splitted) < 2 or not item_description_splitted[1].strip().startswith("Ingredientes"): 
+                item_ingredients = ""
+            else: 
+                item_ingredients = item_ingredients[1]
+            if item_description_splitted[-1].strip().startswith("Origen"): 
+                origin = item_description_splitted[-1]
+            else: 
+                origin = ""
+            prod_info = await product_info_llm.get_brand_allergens(title = item_title, ingredients = item_ingredients)
             item = {
+                "product_ID": item_id, 
+                "category": subcategory, 
+                "subcategory": subsection_name,
                 "description": item_description, 
                 "title": item_title, 
                 "item_size": item_size, 
-                "item_price": item_price, 
-                "image_path": filenames,
-                "category": category, 
-                "subcategory": subcategory, 
-                "subsection_name": subsection_name,
-                "id": item_id, 
+                "item_price": item_price,
+                "price_per_measurement": item_weight,
+                "image_path": folder_imgs,
+                "origin": origin, 
             }
-            print(item)
-            list_items.append(item)
+            item.update(nutr_info)
+            item.update(prod_info)
+            print(json.dumps(item))
+            #list_items.append(item)
+            #list_items.update()
+            # Add it to the databases (relational and vector)
+
+            await asyncio.sleep(2)
 
             await page.locator("[data-testid='modal-close-button']").click() 
             await asyncio.sleep(random.uniform(1, 3))
