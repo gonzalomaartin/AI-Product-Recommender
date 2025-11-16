@@ -1,33 +1,38 @@
 import ollama
 import os 
 import json 
+import asyncio 
+import time 
 
-client = ollama.Client() 
+client = ollama.AsyncClient() 
 model="qwen2.5vl" 
 with open("prompts/VLM.txt", "r", encoding="utf-8") as file:
     prompt = file.read()
 
 
-def parse_images(image_path): 
-    files = os.listdir(image_path)
-    files = [os.path.join(image_path, file) for file in files]
+async def parse_images(folder_imgs): 
+    print("Calling the VLM...")
+    t0 = time.time() 
+    files = os.listdir(folder_imgs)
+    files = [os.path.join(folder_imgs, file) for file in files]
     images_data = []
     for file in files: 
         with open(file, "rb") as image_file:
             image_data = image_file.read()
             images_data.append(image_data)
 
-    response = client.generate(
+    response = await client.generate(
         model= model, 
         prompt = prompt,
-        images = images_data
+        images = images_data, 
+        options={"device": "cuda", "dtype": "float16"}
     )
     
     if response.response.startswith("```json"): 
         nutrition_text = response.response.split("\n")
-        return json.loads("".join(nutrition_text[1:-1]))
+        return json.loads("".join(nutrition_text[1:-1])), time.time() - t0
     else: 
-        return json.loads(response.response)
+        return json.loads(response.response), time.time() - t0
 
 
 if __name__ == "__main__": 

@@ -1,6 +1,7 @@
 import ollama 
 import json
 import asyncio
+import time
 
 client = ollama.AsyncClient()
 
@@ -11,17 +12,22 @@ with open("prompts/BRAND_ALLERGIES_prod.txt", "r", encoding = "utf-8") as file:
     global_prompt = file.read() 
 
 
-
+#Async because LLM tasks have a lot of I/O operations, and we can switch resources to another coroutine
 async def get_brand_allergens(title, ingredients): 
+    print("Calling the LLM...")
+    t0 = time.time() 
     prompt = global_prompt.replace("{title}", title).replace("{ingredients}", ingredients)
-    response = await client.generate(model = model, prompt = prompt)
-    print(response.response)
+    response = await client.generate(
+        model = model, 
+        prompt = prompt,  
+        options={"device": "cuda", "dtype": "float16"}
+    )
    
     if response.response.startswith("```json"): 
         nutrition_text = response.response.split("\n")
-        return json.loads("".join(nutrition_text[1:-1]))
+        return json.loads("".join(nutrition_text[1:-1])), time.time() - t0
     else: 
-        return json.loads(response.response)
+        return json.loads(response.response), time.time() - t0 
 
 
 
