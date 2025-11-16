@@ -10,11 +10,15 @@ import re
 import nutritional_info_vlm
 import product_info_llm
 import json 
+import time
+from pprint import pprint, PrettyPrinter
 
-
-CONCURRENCY = 1 
-semaphore = asyncio.Semaphore(CONCURRENCY)
+PROD_CONCURRENCY = 1 
+LLM_VLM_CONCURRENCY = 1
+prod_semaphore = asyncio.Semaphore(PROD_CONCURRENCY)
+llm_vlm_semaphore = asyncio.Semaphore(LLM_VLM_CONCURRENCY)
 POSTAL_CODE = "46013"
+
 
 async def fill_input(page: Page, value: str, wait_time: int = 2): 
     try: 
@@ -65,10 +69,19 @@ async def download_image(image_url: str, save_folder: str, filename: str):
     except Exception as e:
         print(f"❌ Error downloading image {image_url}: {e}")
         return None
-    
 
-async def get_item_weight(weight): 
-    ...
+async def llm_vlm_task(title, ingredients, folder_imgs): 
+    async with llm_vlm_semaphore: 
+        llm_task = product_info_llm.get_brand_allergens(title=title, ingredients=ingredients) 
+        #as it's not awaited, the function doesn't get executed and returns a coroutine that gets passed to asyncio.gather()
+        vlm_task = nutritional_info_vlm.parse_images(folder_imgs)
+        
+        # Run LLM + VLM concurrently for this product
+        (prod_info, llm_duration), (nutr_info, vlm_duration) = await asyncio.gather(llm_task, vlm_task)
+        #asyncio.gather() creates one subroutine for each task, and when one task gets awaited, the resources move to another coroutine
+        #without any set priority. the coroutines are runned concurrently (not simultaneous) within the same OS thread. 
+        return prod_info, llm_duration, nutr_info, vlm_duration
+    
     
 async def get_categories(page: Page): 
     item_info = []
@@ -118,10 +131,14 @@ async def get_items(page: Page, category: str, subcategory: str):
             item_description_locator = item_locator.locator("div.private-product-detail__left")
             item_description = await item_description_locator.get_attribute("aria-label")
             item_title = await item_locator.locator("h1.private-product-detail__description").inner_text()
-            item_size = await item_locator.locator("div.product-format__size").get_attribute("aria-label")
+            item_size_locator = item_locator.locator("div.product-format__size")
+            item_size_spans_locator = item_size_locator.locator("span")
+            item_size_texts = await item_size_spans_locator.all_text_contents()
+            item_size = "".join(item_size_texts)
             item_price = await item_locator.locator("[data-testid='product-price']").first.inner_text()
+            item_price = float(re.search(r"(\d+,\d+)", item_price).group(1).replace(",", "."))
             image_button = item_locator.locator("button.product-gallery__thumbnail")
-            filenames = []
+            #filenames = []
             image_button_count = await image_button.count()
             for i in range(image_button_count): 
                 await image_button.nth(i).click()
@@ -131,44 +148,53 @@ async def get_items(page: Page, category: str, subcategory: str):
                 filename = f"{i}.jpg"
                 folder_imgs = f"../images/{subsection_name}{item_id}/"
                 await download_image(img, folder_imgs, filename)
-                filenames.append(filename)
+                #filenames.append(filename)
 
-            loop = asyncio.get_running_loop()
-            nutr_info = await loop.run_in_executor(None, nutritional_info_vlm.parse_images, folder_imgs)
+            item_price_pattern = re.search(r"(\d+,\d+)\s€/(\w+)", item_size)
+            item_price_measurement = float(item_price_pattern.group(1).replace(",", "."))
+            item_units = item_price_pattern.group(2)
+            if item_units == "100ml" or item_units == "100g": 
+                item_price_measurement *= 10
+            item_weight = item_price / item_price_measurement
             item_description_splitted = item_description.split("..")
-            item_weight, item_price_measurement = item_size.split("|")
-            item_price_measurement = await re.match(r"\d+,\d+", item_price_measurement)
-            item_price_measurement = float(item_price_measurement.match(1))
-            item_weight = await get_item_weight(item_weight)
             if len(item_description_splitted) < 2 or not item_description_splitted[1].strip().startswith("Ingredientes"): 
-                item_ingredients = ""
+                item_ingredients = "" #get the ingrients as the whole item_description
             else: 
-                item_ingredients = item_ingredients[1]
+                item_ingredients = item_description_splitted[1]
             if item_description_splitted[-1].strip().startswith("Origen"): 
-                origin = item_description_splitted[-1]
+                origin = item_description_splitted[-1].split(":")[1].strip()
             else: 
-                origin = ""
-            prod_info = await product_info_llm.get_brand_allergens(title = item_title, ingredients = item_ingredients)
+                origin = None
+
+            prod_info, llm_duration, nutr_info, vlm_duration = await llm_vlm_task(title = item_title, ingredients = item_ingredients, folder_imgs = folder_imgs)
+            print(f"LLM call took {llm_duration:.2f} seconds.")
+            print(f"VLM call took {vlm_duration:.2f} seconds.")
+
             item = {
                 "product_ID": item_id, 
                 "category": subcategory, 
                 "subcategory": subsection_name,
                 "description": item_description, 
                 "title": item_title, 
-                "item_size": item_size, 
+                "item_size": item_size,     
                 "item_price": item_price,
-                "price_per_measurement": item_weight,
+                "weight": item_weight, 
+                "price_per_measurement": item_price_measurement,
                 "image_path": folder_imgs,
                 "origin": origin, 
+                "product_link": item_url, 
+                "llm_time": llm_duration, 
+                "vlm_time": vlm_duration
             }
+            #pp = PrettyPrinter(sort_dicts=False, indent=4)
             item.update(nutr_info)
             item.update(prod_info)
-            print(json.dumps(item))
+            print(json.dumps(item, indent=4, ensure_ascii=False)) # Prety printing the dictionary with all the information (one line for each key, value)
             #list_items.append(item)
             #list_items.update()
             # Add it to the databases (relational and vector)
 
-            await asyncio.sleep(2)
+            #await asyncio.sleep(5)
 
             await page.locator("[data-testid='modal-close-button']").click() 
             await asyncio.sleep(random.uniform(1, 3))
@@ -207,4 +233,5 @@ async def run_single(postal_code: str = POSTAL_CODE):
         except Exception as e: 
             print(e)
 
-asyncio.run(run_single())
+if __name__ == "__main__": 
+    asyncio.run(run_single())
