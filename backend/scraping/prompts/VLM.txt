@@ -8,64 +8,88 @@ Tu tarea es reconstruir, interpretar y normalizar la información del producto i
 DEBES devolver únicamente **JSON válido** con esta estructura:
 
 {
-"energy_kj": float or null,
-"energy_kcal": float or null,
-"fat_g": float or null,
-"saturated_fat_g": float or null,
-"mono_fat_g": float or null,
-"poly_fat_g": float or null,
-"carbs_g": float or null,
-"sugars_g": float or null,
-"fibre_g": float or null,
-"protein_g": float or null,
-"salt_g": float or null,
-"claims": [list of claims or empty]
+"energia_kj": float or null,
+"energia_kcal": float or null,
+"grasas_g": float or null,
+"grasas_saturadas_g": float or null,
+"grasas_mono_g": float or null,
+"grasas_poli_g": float or null,
+"carbohidratos_g": float or null,
+"azucar_g": float or null,
+"fibra_g": float or null,
+"proteina_g": float or null,
+"sal_g": float or null,
+"atributos": [lista de atributos o vacía]
 }
 
 INSTRUCCIONES DETALLADAS:
 
 1. **INSTRUCCIONES GENERALES**
 - Une la información que pueda aparecer fragmentada en distintas imagenes o poco visible. 
-- En la etiqueta de la informacion nutricional, pueden aparecer la informacion nutricional en funcion de la racion. Estos campos estan divididos por una linea vertical, no juntes los valores de ambas secciones, ya que no estan relacionados. Siempre utilizar la medida estandard (100 g/ml) para obtener la informacion nutricional.
+- En la etiqueta de la informacion nutricional, pueden aparecer la informacion nutricional en funcion de la racion. Estos campos estan divididos por una linea vertical, no juntes los valores de ambas secciones, ya que no estan relacionados. Siempre utilizar la medida estandard (100 g/ml) para obtener la información nutricional.
 - En muchas etiquetas de la informacion nutricional, puede NO aparecer valores numericos para algun tipo de grasas (saturadas, monosaturadas, polisaturadas) NO inventar el valor de estas grasas, ni hacer operaciones aritmeticas para estimarlas. 
 
 2. **Identificación robusta de nutrientes**
 En caso de que en la etiqueta se muestren los nutrientes por cada 100gramos/ml y por cada ración. Siempre utiliza por cada 100gramos/ml para obtener la información nutricional.
+El valor energético en kcal suele ser más visible y destacado que en kJ.
 Usa estos sinónimos y variantes para cada categoría:
 
-- **fat_g** → “grasas”, “lípidos”, “materia grasa”, “fat”, “grasa total”
-- **saturated_fat_g** → “saturadas”, “de las cuales saturadas”, “sat.”, “ácidos grasos saturados”,
-- **mono_fat_g** → “monoinsaturadas”, "de las cuales monosaturadas", “mono”, “ác. grasos monoins.” -> no muy comun
-- **poly_fat_g** → “poliinsaturadas”, "de las cuales polisaturadas", “poli”, “ác. grasos poliins.” -> no muy comun
-- **carbs_g** → “hidratos de carbono”, “carbohidratos”, “carbs”
-- **sugars_g** → “azúcares”, “azucar”, “de los cuales: azúcares”
-- **fibre_g** → “fibra alimentaria”, “fibre”, “fibra” -> puede no aparecer 
-- **protein_g** → “proteínas”, “protein”
-- **salt_g** → “sal”, “salt”, “sodio” (si solo aparece sodio, conviértelo a sal: sal = sodio × 2.5)
-
+- **grasas_g** → “grasas”, “lípidos”, “materia grasa”, “fat”, “grasa total”
+- **grasas_saturadas_g** → “saturadas”, “de las cuales saturadas”, “sat.”, “ácidos grasos saturados”
+- **grasas_mono_g** → “monoinsaturadas”, "de las cuales monosaturadas", “mono”, “ác. grasos monoins.”
+- **grasas_poli_g** → “poliinsaturadas”, "de las cuales polisaturadas", “poli”, “ác. grasos poliins.”
+- **carbohidratos_g** → “hidratos de carbono”, “carbohidratos”, “carbs”
+- **azucar_g** → “azúcares”, “azucar”, “de los cuales: azúcares”
+- **fibra_g** → “fibra alimentaria”, “fibre”, “fibra”
+- **proteina_g** → “proteínas”, “protein”
+- **sal_g** → “sal”, “salt”, “sodio” (si solo aparece sodio, conviértelo a sal: sal = sodio × 2.5)
 
 3. **Normalización obligatoria**
 - Usa siempre punto decimal, no coma.
 - Todos los valores deben ser floats (ej. 12 → 12.0)
 - Convierte unidades si es necesario (mg → g dividiendo entre 1000).
 
-5. **Claims (con normalizacion obligatoria)**
-- Incluye claims nutricionales y comerciales relevantes. 
-- Solo quiero los siguientes claims como posibles valores. Asi que normaliza cualquier valor usando esta lista base compacta: 
-CLAIMS_BASE = [vegano, vegetariano, ecologico, eco, bio, organico, natural, 100% natural, light, bajo en grasa, bajo en azucar, sin azucar anadido, bajo en sal, alto en proteina, rico en proteina, fuente de fibra, alto en fibra, sin aditivos, sin conservantes, sin aceite de palma, non-gmo, halal]
--Los productos sin gluten o sin lactosa, NO pueden tener ni la mas minima traza de dicho un producto glucemico/lacteo.
-Reglas:
-- Acepta coincidencias aproximadas (“vegnao” → vegano, “ec0” → eco, “bajo contenido en grasa” → bajo en grasa).
-- Normaliza el claim a la forma exacta de la lista.
-- No inventes claims: solo inclúyelos si el texto los expresa explícita o implícitamente de forma clara.
+5. **ATRIBUTOS (detección estricta y sin invenciones)**
+ATENCIÓN: Bajo ningún concepto inventes atributos.
+Un atributo SOLO puede aparecer en la salida si:
 
+1. Está escrito explícitamente en el texto de la imagen
+   (“vegano”, “vegetariano”, “bio”, “natural”, “light”, etc.)
+
+2. O aparece de manera VISUAL como un icono/etiqueta:
+   - símbolo "VEGANO"
+   - sello "BIO"
+   - sello "ECO"
+   - sello "HALAL"
+   - símbolo "SIN GLUTEN" (celíaco)
+   - símbolo o etiqueta "SIN LACTOSA"
+   etc.
+
+Los productos con 0% aceite de palma / azúcares añadidos deben considerarse como productos sin aceite de palma / azúcares añadidos.
+Si NO aparece texto ni iconografía, NO incluyas nada.
+No uses inferencias. No uses intuiciones. NO ASUMAS NADA.
+ATRIBUTOS_BASE = [
+  "vegano", "vegetariano", "ecologico", "eco", "bio", "organico",
+  "natural", "100% natural", "light", "bajo en grasa",
+  "bajo en azucar", "sin azucar anadido", "bajo en sal",
+  "alto en proteina", "rico en proteina", "fuente de fibra",
+  "alto en fibra", "sin aditivos", "sin conservantes",
+  "sin aceite de palma", "non-gmo", "halal"
+]
+Reglas:
+- Normaliza solo si el texto coincide o se parece.
+- Si no aparece claramente → NO INCLUIR.
+- Si aparece un atributo que no está en la lista, ignóralo (no lo inventes).
+- Si dudas mínimamente de que sea atributo → NO incluirlo.
+
+Resultado esperado: lista corta, precisa y sin inventar.
 
 6. **Si falta información**
 - Usa null para campos nutricionales no encontrados. Si un campo tiene un valor de 0, utiliza dicho valor para el campo. 
-- Usa lista vacía en “claims” si corresponde.
+- Usa lista vacía en “atributos” si corresponde.
 - NUNCA inventes datos. 
 
 7. **Salida final**
 Devuelve SOLO el JSON válido sin texto adicional, explicaciones ni comentarios.
 
-Ahora extrae la información de las siguientes imagenes. 
+Ahora extrae la información de las siguientes imagenes.

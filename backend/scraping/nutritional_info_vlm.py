@@ -12,7 +12,7 @@ with open("prompts/VLM.txt", "r", encoding="utf-8") as file:
 
 async def parse_images(folder_imgs): 
     print("Calling the VLM...")
-    t0 = time.time() 
+    t0 = time.perf_counter() 
     files = os.listdir(folder_imgs)
     files = [os.path.join(folder_imgs, file) for file in files]
     images_data = []
@@ -28,17 +28,19 @@ async def parse_images(folder_imgs):
         options={"device": "cuda", "dtype": "float16"}
     )
     
+    t1 = time.perf_counter() 
     if response.response.startswith("```json"): 
         nutrition_text = response.response.split("\n")
-        return json.loads("".join(nutrition_text[1:-1])), time.time() - t0
+        return json.loads("".join(nutrition_text[1:-1])), t1 - t0
     else: 
-        return json.loads(response.response), time.time() - t0
+        return json.loads(response.response), t1 - t0
 
 
 if __name__ == "__main__": 
     BASE_PATH = "../images/prueba"
-    nutrition_text = parse_images(BASE_PATH)
+    nutrition_text, vlm_time = asyncio.run(parse_images(BASE_PATH))
     if nutrition_text:
+        print(f"It took {vlm_time:.2f} seconds")
         print("Nutrition info detected:")
         print(nutrition_text)
     else:

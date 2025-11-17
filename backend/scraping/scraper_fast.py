@@ -13,6 +13,8 @@ import json
 import time
 from pprint import pprint, PrettyPrinter
 
+
+WAIT_TIME = 0.25 #when clicling or performing an action, playwright needs some type to update the DOM
 PROD_CONCURRENCY = 1 
 LLM_VLM_CONCURRENCY = 1
 prod_semaphore = asyncio.Semaphore(PROD_CONCURRENCY)
@@ -20,14 +22,14 @@ llm_vlm_semaphore = asyncio.Semaphore(LLM_VLM_CONCURRENCY)
 POSTAL_CODE = "46013"
 
 
-async def fill_input(page: Page, value: str, wait_time: int = 2): 
+async def fill_input(page: Page, value: str, wait_time: int = WAIT_TIME): 
     try: 
         element = await page.query_selector('[data-testid="postal-code-checker-input"]')
         await asyncio.sleep(wait_time)
         await element.fill("") #focusing and cleaning placeholder values 
         for ch in value: 
             await page.keyboard.type(ch)
-            await asyncio.sleep(random.uniform(0.1, 0.2))
+            #await asyncio.sleep(random.uniform(0.1, 0.2))
 
         return True
     
@@ -37,10 +39,10 @@ async def fill_input(page: Page, value: str, wait_time: int = 2):
         return False
 
 
-async def submit_form(page: Page, timeout: int = 2): 
+async def submit_form(page: Page, timeout: int = 0.2): 
     try: 
         await page.keyboard.press("Enter")
-        await page.wait_for_load_state("networkidle", timeout = timeout) #waiting for no more network requests
+        #await page.wait_for_load_state("networkidle", timeout = timeout) #waiting for no more network requests
         return True
     
     except Exception as e: 
@@ -70,9 +72,9 @@ async def download_image(image_url: str, save_folder: str, filename: str):
         print(f"❌ Error downloading image {image_url}: {e}")
         return None
 
-async def llm_vlm_task(description, folder_imgs): 
+async def llm_vlm_task(description, folder_imgs, price_description): 
     async with llm_vlm_semaphore: 
-        llm_task = product_info_llm.get_brand_allergens(description) 
+        llm_task = product_info_llm.get_brand_allergens(description, price_description) 
         #as it's not awaited, the function doesn't get executed and returns a coroutine that gets passed to asyncio.gather()
         vlm_task = nutritional_info_vlm.parse_images(folder_imgs)
         
@@ -85,9 +87,9 @@ async def llm_vlm_task(description, folder_imgs):
     
 async def get_categories(page: Page): 
     item_info = []
-    await asyncio.sleep(random.uniform(1, 3))
+    await asyncio.sleep(WAIT_TIME)
     await page.locator("a[href='/categories']").click() 
-    await asyncio.sleep(random.uniform(1, 3))
+    await asyncio.sleep(WAIT_TIME)
     category_items = page.locator("li.category-menu__item")
     count = await category_items.count() 
 
@@ -96,7 +98,7 @@ async def get_categories(page: Page):
         category = await item.locator("label.subhead1-r").inner_text() 
         print(f"Category: {category}")
         await item.locator("button").first.click()
-        await asyncio.sleep(random.uniform(0.5, 3))
+        await asyncio.sleep(WAIT_TIME)
         subcategory_items = page.locator("li.category-item")
         subcategory_count = await subcategory_items.count() 
         for j in range(subcategory_count): 
@@ -124,7 +126,7 @@ async def get_items(page: Page, category: str, subcategory: str):
         items_count = await section_items.count() 
         for z in range(items_count): 
             await section_items.nth(z).locator("button.product-cell__content-link").click()
-            await asyncio.sleep(random.uniform(1, 3))
+            await asyncio.sleep(WAIT_TIME)
             item_url = page.url
             item_id = re.search(r"/(\d+)/", item_url).group(1)
             item_locator = page.locator("div.private-product-detail__content")
@@ -134,7 +136,7 @@ async def get_items(page: Page, category: str, subcategory: str):
             item_size_locator = item_locator.locator("div.product-format__size")
             item_size_spans_locator = item_size_locator.locator("span")
             item_size_texts = await item_size_spans_locator.all_text_contents()
-            item_size = "".join(item_size_texts)
+            item_size_description = "".join(item_size_texts)
             item_price = await item_locator.locator("[data-testid='product-price']").first.inner_text()
             item_price = float(re.search(r"(\d+,\d+)", item_price).group(1).replace(",", "."))
             image_button = item_locator.locator("button.product-gallery__thumbnail")
@@ -142,7 +144,7 @@ async def get_items(page: Page, category: str, subcategory: str):
             image_button_count = await image_button.count()
             for i in range(image_button_count): 
                 await image_button.nth(i).click()
-                await asyncio.sleep(random.uniform(0.5, 1.5))
+                await asyncio.sleep(WAIT_TIME)
                 img = await item_description_locator.locator("[data-testid='image-zoomer-container'] img").get_attribute("src")
                 print(img)
                 filename = f"{i}.jpg"
@@ -151,7 +153,8 @@ async def get_items(page: Page, category: str, subcategory: str):
                 #filenames.append(filename)
 
             item_description_llm = item_description.split("Instrucciones de uso")[0]
-            item_price_pattern = re.search(r"(\d+,\d+)\s€/([\w\s]+)", item_size)
+            item_size = item_size_description.split("|")[0]
+            item_price_pattern = re.search(r"(\d+,\d+)\s€/([\w\s]+)", item_size_description)
             item_price_measurement = float(item_price_pattern.group(1).replace(",", "."))
             item_units = item_price_pattern.group(2).strip()
             if item_units == "100 ml" or item_units == "100 g":
@@ -168,7 +171,7 @@ async def get_items(page: Page, category: str, subcategory: str):
             else: 
                 item_origin = None
 
-            prod_info, llm_duration, nutr_info, vlm_duration = await llm_vlm_task( description = item_description_llm, folder_imgs = folder_imgs)
+            prod_info, llm_duration, nutr_info, vlm_duration = await llm_vlm_task(description = item_description_llm, folder_imgs = folder_imgs, price_description = item_size_description)
             print(f"LLM call took {llm_duration:.2f} seconds.")
             print(f"VLM call took {vlm_duration:.2f} seconds.")
 
@@ -178,8 +181,8 @@ async def get_items(page: Page, category: str, subcategory: str):
                 "subcategory": subsection_name,
                 "description": item_description, 
                 "title": item_title, 
-                "item_size": item_size,     
-                "item_price": item_price,
+                "price_description": item_size_description,     
+                "price": item_price,
                 "weight": item_weight, 
                 "unit": item_units, 
                 "price_per_unit": item_price_measurement,
@@ -195,12 +198,12 @@ async def get_items(page: Page, category: str, subcategory: str):
             print(json.dumps(item, indent=4, ensure_ascii=False)) # Prety printing the dictionary with all the information (one line for each key, value)
             #list_items.append(item)
             #list_items.update()
-            # Add it to the databases (relational and vector)
+            # Add it to the databases (relational and vector) + DataFrame
 
             #await asyncio.sleep(5)
 
             await page.locator("[data-testid='modal-close-button']").click() 
-            await asyncio.sleep(random.uniform(1, 3))
+            await asyncio.sleep(WAIT_TIME)
 
 
     return list_items
@@ -218,11 +221,11 @@ async def run_single(postal_code: str = POSTAL_CODE):
         )
         page = await context.new_page()
         await page.goto("https://tienda.mercadona.es/", wait_until = "domcontentloaded")
-        await asyncio.sleep(random.uniform(1, 2))
+        await asyncio.sleep(WAIT_TIME) #Needed for the website to stabilize the network connection
         try: 
             cookie_banner = page.locator('.cookie-banner__actions')  # or another selector
             await cookie_banner.get_by_role("button", name="Aceptar").click()
-            await asyncio.sleep(random.uniform(1, 2))
+            await asyncio.sleep(WAIT_TIME)
         except Exception as e: 
             print(f"Cookie problem: {e}")
             await page.screenshot(path = "cookies.png")
@@ -232,7 +235,6 @@ async def run_single(postal_code: str = POSTAL_CODE):
             pass 
         try: 
             item_info = await get_categories(page)
-            time.sleep(5)
         except Exception as e: 
             print(e)
 
