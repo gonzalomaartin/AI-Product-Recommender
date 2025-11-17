@@ -1,15 +1,5 @@
 TODO: 
 
 -Make the scraper modular by dividing it into functions, which makes testing and understanding the code much easier. 
--Change the claims explanation in the VLM, as it's failing a lot, it makes up claims. 
--Change the allergies in the LLM, the whole item description with the allergies is going to be passed (mix the allergens stated and the ones from the ingredients)
--Gather the origin of the product following some standards from the description
--Get the ingredients from the OCR data, as it's more reliable and specific.
--Get the allergens from the product description
--How to get the brand of the product? I think that through the OCR is the best way 
--Should I standarize measurements for kg and Liter or just write the measurement used as another attribute? 
-Standarize is better for future queries or just use common sense or standize based on the category. 
--Should I use a VLM for every case, just for the ones that OCR + LLM is not enough or never? 
--How to store the information, so it's easier for the RAG or query LLM to gather it easier. I mean for example latas de cerveza, 
-should I store it as a string, as the final weight? 
--Check if Mercadona has a rate limiter by scraping data/doing requests with as much threads as possible. 
+-How to apply concurrency to gather information about different products? Should I do it, if I can only do 1 VLM + 1 LLM at a time, 
+and this is the process that takes much more time than anything else? 
