@@ -12,7 +12,16 @@ import product_info_llm
 import json 
 import time
 from pprint import pprint, PrettyPrinter
+from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import Column, Integer, String, JSON, Float
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+import asyncpg
+from dotenv import load_dotenv
+import chromadb
+from chromadb.config import Settings
+import ollama 
 
+load_dotenv()  # loads the .env file
 
 WAIT_TIME = 0.25 #when clicling or performing an action, playwright needs some type to update the DOM
 PROD_CONCURRENCY = 1 
@@ -20,6 +29,70 @@ LLM_VLM_CONCURRENCY = 1
 prod_semaphore = asyncio.Semaphore(PROD_CONCURRENCY)
 llm_vlm_semaphore = asyncio.Semaphore(LLM_VLM_CONCURRENCY)
 POSTAL_CODE = "46013"
+df = None
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+engine = create_async_engine(DATABASE_URL)
+SessionLocal = async_sessionmaker(autoflush=True, bind=engine, expire_on_commit=False)
+Base = declarative_base()
+
+# Ensure the parent directory exists
+persist_directory = "../databases/chroma_db"
+os.makedirs(os.path.dirname(persist_directory), exist_ok=True)
+
+# Use persistent local directory
+vector_client = chromadb.PersistentClient(path = persist_directory)
+collection_name = "products"
+existing_collections = [col.name for col in vector_client.list_collections()]
+if collection_name in existing_collections:
+    collection = vector_client.get_collection(collection_name)
+    print(f"Collection '{collection_name}' already exists. Using the existing collection.")
+else:
+    collection = vector_client.create_collection(collection_name)
+    print(f"Collection '{collection_name}' created successfully.")
+
+EMBEDDING_MODEL = "bge-m3"
+
+class Product(Base):
+    __tablename__ = "product-db"
+
+    ID_producto = Column(String, primary_key=True)
+    categoria = Column(String)
+    subcategoria = Column(String)
+    descripcion = Column(String)
+    titulo = Column(String)
+    precio = Column(Float)
+    marca = Column(String)
+    origen = Column(String)
+    descripcion_precio = Column(String)
+    peso = Column(Float)
+    unidad = Column(String)
+    precio_por_unidad = Column(Float)
+    precio_relativo = Column(String)
+    alergenos = Column(JSON)
+    atributos = Column(JSON) 
+    energia_kj = Column(Integer)
+    energia_kcal = Column(Integer)
+    grasas_g = Column(Float)
+    grasas_saturadas_g = Column(Float)
+    grasas_mono_g = Column(Float)
+    grasas_poli_g = Column(Float) 
+    carbohidratos_g = Column(Float)
+    azucar_g = Column(Float)
+    fibra_g = Column(Float)
+    proteina_g = Column(Float)
+    sal_g = Column(Float)
+    link_producto = Column(String, unique = True)
+
+
+async def init_db():
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        print("Database initialized successfully!")
+    except Exception as e:
+        print(f"Failed to initialize the database: {e}")
+
 
 
 async def fill_input(page: Page, value: str, wait_time: int = WAIT_TIME): 
@@ -85,8 +158,8 @@ async def llm_vlm_task(description, folder_imgs, price_description):
         return prod_info, llm_duration, nutr_info, vlm_duration
     
     
-async def get_categories(page: Page): 
-    item_info = []
+async def get_categories(page: Page):
+    global df  
     await asyncio.sleep(WAIT_TIME)
     await page.locator("a[href='/categories']").click() 
     await asyncio.sleep(WAIT_TIME)
@@ -99,33 +172,29 @@ async def get_categories(page: Page):
         print(f"Category: {category}")
         await item.locator("button").first.click()
         await asyncio.sleep(WAIT_TIME)
-        subcategory_items = page.locator("li.category-item")
-        subcategory_count = await subcategory_items.count() 
-        for j in range(subcategory_count): 
-            subitem = subcategory_items.nth(j)
-            subcategory = await subitem.locator("button.category-item__link").first.inner_text() 
-            print(f"Subcategory: {subcategory}")
-            list_items = await get_items(page, category, subcategory) 
-            for i in range(len(list_items)): 
-                # add the elements to the db 
-                item_info.append(list_items[i])
+        list_items = await get_items(page, category) 
+        if df is None: 
+            df = pd.DataFrame(list_items)
+        else: 
+            df_aux = pd.DataFrame(list_items)
+            df = pd.concat([df, df_aux], ignore_index=True)
+        
+        print("✅ Batch of items saved into the DataFrame")
 
-    return item_info 
             
 
-async def get_items(page: Page, category: str, subcategory: str): 
+async def get_items(page: Page,subcategory: str): 
     list_items = []
-    section_items = page.locator("[data-testid='section']")
-    subsections = section_items.locator("h2.section__header")
+    subsections = page.locator("[data-testid='section']")
     subsection_count = await subsections.count()
     for k in range(subsection_count): 
         subsection = subsections.nth(k)
-        subsection_name = await subsection.inner_text()
+        subsection_name = await subsection.locator("h2").first.inner_text()
         print(f"Subsection: {subsection_name}")
-        section_items = section_items.locator("[data-testid='product-cell']")
+        section_items = subsection.locator("[data-testid='product-cell']")
         items_count = await section_items.count() 
         for z in range(items_count): 
-            await section_items.nth(z).locator("button.product-cell__content-link").click()
+            await section_items.nth(z).locator("[data-testid='open-product-detail']").click()
             await asyncio.sleep(WAIT_TIME)
             item_url = page.url
             item_id = re.search(r"/(\d+)/", item_url).group(1)
@@ -152,7 +221,7 @@ async def get_items(page: Page, category: str, subcategory: str):
                 await download_image(img, folder_imgs, filename)
                 #filenames.append(filename)
 
-            item_description_llm = item_description.split("Instrucciones de uso")[0]
+            item_description_llm = item_description.split("Instrucciones")[0]
             item_size = item_size_description.split("|")[0]
             item_price_pattern = re.search(r"(\d+,\d+)\s€/([\w\s]+)", item_size_description)
             item_price_measurement = float(item_price_pattern.group(1).replace(",", "."))
@@ -163,7 +232,7 @@ async def get_items(page: Page, category: str, subcategory: str):
                 else: 
                     item_units = "kg" 
                 item_price_measurement *= 10
-            item_weight = item_price / item_price_measurement #round it to the second decimal as floating point operations are not exact
+            item_weight = round(item_price / item_price_measurement, 2)  # round to 2 decimal places
             
             item_origin = re.search(r"Origen: (\w+)", item_description)
             if item_origin: 
@@ -175,32 +244,77 @@ async def get_items(page: Page, category: str, subcategory: str):
             print(f"LLM call took {llm_duration:.2f} seconds.")
             print(f"VLM call took {vlm_duration:.2f} seconds.")
 
-            item = {
-                "product_ID": item_id, 
-                "category": subcategory, 
-                "subcategory": subsection_name,
-                "description": item_description, 
-                "title": item_title, 
-                "price_description": item_size_description,     
-                "price": item_price,
-                "weight": item_weight, 
-                "unit": item_units, 
-                "price_per_unit": item_price_measurement,
-                "image_path": folder_imgs,
-                "origin": item_origin, 
-                "product_link": item_url, 
-                "llm_time": llm_duration, 
-                "vlm_time": vlm_duration
+            item_info = {
+                "ID_producto": item_id, 
+                "categoria": subcategory, 
+                "subcategoria": subsection_name,
+                "descripcion": item_description, 
+                "titulo": item_title, 
+                "precio": item_price,
+                "descripcion_precio": item_size_description,   
+                "peso": item_weight, 
+                "unidad": item_units, 
+                "precio_por_unidad": item_price_measurement, #price normalized
+                "origen": item_origin, 
+                "link_producto": item_url, 
             }
-            #pp = PrettyPrinter(sort_dicts=False, indent=4)
-            item.update(nutr_info)
-            item.update(prod_info)
-            print(json.dumps(item, indent=4, ensure_ascii=False)) # Prety printing the dictionary with all the information (one line for each key, value)
-            #list_items.append(item)
-            #list_items.update()
-            # Add it to the databases (relational and vector) + DataFrame
 
-            #await asyncio.sleep(5)
+            item_embedding_text = {
+                "Titulo producto": item_title, 
+                "Marca": prod_info["marca"], 
+                "Categoria": subcategory, 
+                "Subcategoria": subsection_name,
+                "Descripcion": item_description_llm, 
+                "Peso": item_size, 
+                "Origen": item_origin,  
+                "Alergenos": prod_info["alergenos"], 
+            }
+
+            item_embedding_text.update(nutr_info)
+            lines = []
+            for k, v in item_embedding_text.items():
+                if k =="precio_relativo": 
+                    continue
+                if isinstance(v, list):
+                    v = ", ".join(v) if v else "ninguno"
+                lines.append(f"{k}: {v}")
+
+            embedding_text = "\n".join(lines)
+
+            item_info.update(nutr_info)
+            item_info.update(prod_info)
+            print(json.dumps(item_info, indent=4, ensure_ascii=False)) # Prety printing the dictionary with all the information (one line for each key, value)
+            # Add it to the databases (relational and vector) + DataFrame
+            
+            list_items.append(item_info)
+
+            item_embedding = ollama.embed(
+                model = EMBEDDING_MODEL, 
+                input = embedding_text
+            )
+
+            async with SessionLocal() as session: #try sync instead of async
+                new_product = Product(**item_info)
+                session.add(new_product)
+                print("🔄 Adding product to the session...")
+                await session.commit() # problem here 
+                print(f"✅ Successfully uploaded product {item_info['ID_producto']} to the relational database.")
+
+            collection.add(
+                ids=[item_id],
+                embeddings=[item_embedding],
+                metadatas=[{}]
+            )
+            print(f"✅ Successfully uploaded product {item_info['ID_producto']} to the vector database.")
+
+            """
+            # Retrieving information from a SQL query and converting it into a Python dictionary
+            async with SessionLocal() as session:
+                result = await session.execute(select(Product))
+                products = result.scalars().all()
+
+            product_list = [p.to_dict() for p in products]
+            """
 
             await page.locator("[data-testid='modal-close-button']").click() 
             await asyncio.sleep(WAIT_TIME)
@@ -234,9 +348,12 @@ async def run_single(postal_code: str = POSTAL_CODE):
         if not await submit_form(page): 
             pass 
         try: 
-            item_info = await get_categories(page)
+            await get_categories(page)
         except Exception as e: 
             print(e)
 
 if __name__ == "__main__": 
+    asyncio.run(init_db())
     asyncio.run(run_single())
+    df.to_csv("../databases/products.csv")
+    print("✅ DataFrame saved to '../databases/products.csv'")

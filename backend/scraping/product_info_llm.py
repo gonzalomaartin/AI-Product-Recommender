@@ -16,7 +16,7 @@ with open("prompts/BRAND_ALLERGIES_prod.txt", "r", encoding = "utf-8") as file:
 async def get_brand_allergens(description, price_description): 
     print("Calling the LLM...")
     t0 = time.perf_counter()
-    prompt = global_prompt.replace("{description}", description).replace("{price_description}", price_description)
+    prompt = global_prompt.replace("{descripcion}", description).replace("{descripcion_precio}", price_description)
     response = await client.generate(
         model = model, 
         prompt = prompt,  

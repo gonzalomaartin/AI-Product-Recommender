@@ -6,8 +6,8 @@ Eres un asistente experto en productos alimenticios. Se te dará los siguentes c
 Tu tarea es extraer:
 
 1. MARCA (marca)
-- La marca suele aparecer al final del título.
-- La marca está en CamelCase salvo 'Hacendado', que también es válida.
+- La marca suele aparecer al principio de la descripcion del producto concramente al final del título del producto. 
+- Si en la descripcion aparece la palabra "Hacendado" utilizalo como marca. 
 - NO consideres como marca palabras comunes en CamelCase como: 'Digestive', 'Original', 'Natural', 'Bio', 'Light', 'Integral', etc.
 - Si aparecen varias posibles marcas, devuelve null.
 - Si no estás seguro, devuelve null.
@@ -55,12 +55,13 @@ Reglas:
 Si no puedes determinar la categoría → devuelve null. NO inventes algun valor que no este en la lista o null. 
 
 4. SALIDA
-Devuelve solo JSON válido (OBLIGATORIO):
+Devuelve SOLO JSON válido (OBLIGATORIO) en el siguiente formato SIN explicaciones:
 {
   "marca": string or null,
   "alergenos": [lista], 
   "precio_relativo": string or null
 }
+
 
 Ejemplos negativos (sin incluir precio relativo):
 Input: "Salsa estilo soja sabor oriental. No contiene soja. Ingredientes: agua, sal."

@@ -8,6 +8,7 @@ Tu tarea es reconstruir, interpretar y normalizar la información del producto i
 DEBES devolver únicamente **JSON válido** con esta estructura:
 
 {
+"atributos": [lista de atributos o vacía]
 "energia_kj": float or null,
 "energia_kcal": float or null,
 "grasas_g": float or null,
@@ -19,7 +20,6 @@ DEBES devolver únicamente **JSON válido** con esta estructura:
 "fibra_g": float or null,
 "proteina_g": float or null,
 "sal_g": float or null,
-"atributos": [lista de atributos o vacía]
 }
 
 INSTRUCCIONES DETALLADAS:
