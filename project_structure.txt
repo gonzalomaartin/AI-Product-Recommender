@@ -1,0 +1,24 @@
+Mercadona-LLM/
+├── README.md
+├── backend/
+├── databases/
+│   ├── chroma_db/
+│   ├── db_operations.py
+│   ├── db_utils.py
+│   ├── products.csv
+│   └── __init__.py
+├── scraping/
+│   ├── images/
+│   ├── measurement.txt
+│   ├── nutritional_info_ocr.py
+│   ├── nutritional_info_vlm.py
+│   ├── product_info_llm.py
+│   ├── prompts/
+│   ├── scraper.py
+│   ├── scraper_fast.py
+│   ├── scraper_fast_cloud.py
+│   ├── STRUCTURE.txt
+│   ├── TODO.txt
+│   ├── utils.py
+│   ├── __init__.py
+│   └── __pycache__/

@@ -1,0 +1,27 @@
+DIFFERENT MEASUREMENTS USED: 
+- kg 
+- 100 g
+- L 
+- 100 ml
+- ud (maquillaje -> Sacar las ud con regex)
+- dc (docenas: huevos -> sacar las unidades también)
+- lv (lavado: detergente -> sacar las unidades tambien )
+
+Ejemplo: 
+    Gominolas Regulación del sueño Melatonina Gummies Vitaldin
+    Bote 30 ud. (90 g) | 0,165 €/ud
+    4,95 €/ud.
+
+
+    Huevos tamaños diferentes
+    Paquete 24 ud. | 2,875 €/dc
+    5,75 €/ud.
+
+    Detergente ropa jabón natural de Marsella Bosque Verde líquido
+    Botella 50 lavados (3 L) | 0,068 €/lv
+    3,40 €/ud.
+
+
+Como parsear toda esta informacion en algo entendible. Quedarte con las unidades originales y sacar todas las unidades. 
+
+Conseguir: precio_por_unidad_medida (L, kg, docena, lavado) y Cantidad de unidades (1.6 kg, 2 docenas, 80 lavados...) mediante una regla de 3

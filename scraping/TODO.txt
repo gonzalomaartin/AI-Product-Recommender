@@ -1,0 +1,7 @@
+TODO: 
+
+-Make the scraper modular by dividing it into functions, which makes testing and understanding the code much easier. 
+-How to apply concurrency to gather information about different products? Should I do it, if I can only do 1 VLM + 1 LLM at a time, 
+and this is the process that takes much more time than anything else? 
+-Create a utils folder for shared components as the database connections, engines...
+-Check if a product is already inside the databases, if so continue (a product can appear in more than one category)

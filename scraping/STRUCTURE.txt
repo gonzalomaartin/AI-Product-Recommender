@@ -1,0 +1,99 @@
+FIELDS FOR THE DB: 
+-Product_ID: sraped
+-Category: scraped (not the one on the left bar)
+-Subcategory: scraped
+-Price: scraped 
+-Weight: scraped (mby pass it to an LLM if you want it to get normalized)
+-brand: LLM given the scraped information of the title
+-ingredients: scraped 
+-nutritional_info: VLM
+-allergens: LLM given the scraped information of the ingredients
+-Claims: VLM
+-Origin: scraped
+-Store_availability: scraped 
+
+
+
+
+
+You are an expert in reading food product labels.
+
+Extract ALL possible information from this image.
+Return STRICTLY valid JSON with the following fields:
+{
+  "brand": "",
+  "category": "",
+  "ingredients": "",
+  "allergens": "",
+  "nutritional_info": {
+    "kcal": "",
+    "fat": "",
+    "saturated_fat": "",
+    "carbs": "",
+    "sugars": "",
+    "proteins": "",
+    "fibra": "",
+    "salt": ""
+  },
+  "weight": "",
+  "claims": []
+}
+
+
+
+You need two storage systems:
+
+1️⃣ Relational DB (PostgreSQL or SQLite)
+
+For fast product lookup by filters:
+
+Stores all the information but for a query it can use the attributes: 
+
+
+
+
+2️⃣ Vector DB (Qdrant, Chroma)
+
+To store:
+
+Titulo
+Categoria 
+Subcategoria 
+Marca
+Descripcion 
+Peso + Unidad (item_size)
+Precio Relativo 
+Atributos 
+Alergenos 
+Origen
+Informacion nutricional
+
+→ This enables “semantic search” when the user describes:
+
+“I want a lactose-free drink, similar to almond milk but cheaper”.
+
+or
+
+“something like Nutella but healthier”.
+
+
+
+[Usuario Prompt] 
+        ↓
+[LLM] → genera query SQL 
+        ↓
+[Relational DB] → ejecuta el query 
+        ↓
+[Vector DB] → búsqueda semántica en text_embedding (y opcional image_embedding)
+        ↓
+[Top-k product_ID] → consulta Relational DB en funcion del product_ID
+        ↓
+[LLM decision] → decide cual son los productos con mejor match de ambas fuentes (vector DB y relational DB) y el prompt del usuario
+
+
+
+VLM: meta-llama/llama-4-scout-17b-16e-instruct (Training)
+LLM: llama-3.1-8b-instant -> SQL(Inference) + brand, allergies, relative_price (Training)
+Reasoning LLM: llama-3.3-70b-versatile (Inference)
+VectorDB: Pinecode
+RelationalDB: Neon
