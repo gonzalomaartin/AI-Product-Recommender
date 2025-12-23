@@ -8,8 +8,3 @@ response = client.models.generate_content(
 )
 
 print(response.text)
-
-
-
-
-#API_KEY = "AIzaSyDeXgbITiudIoYFvfpkulpEKdlHUH4qGWI"
