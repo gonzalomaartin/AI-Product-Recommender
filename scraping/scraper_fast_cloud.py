@@ -12,7 +12,7 @@ import time
 import os  
 import json 
 
-from . import llm_tasks_gemini 
+from . import llm_tasks_groq
 from databases.db_operations import upload_product_relational_db, check_item_id, init_db, upload_product_vector_db, compute_embedding
 
 
@@ -85,11 +85,11 @@ async def download_image(image_url: str, save_folder: str, filename: str):
         return None
     
     
-async def llm_vlm_task(title, description,price_description, folder_imgs):
+async def llm_vlm_task(title, description,price_description, image_urls = None, folder_imgs = None):
     async with llm_vlm_semaphore: 
         # Create coroutines (but do not await yet)
-        llm_task = llm_tasks_gemini.perform_model_task("LLM", title=title, description=description, price_description=price_description)
-        vlm_task = llm_tasks_gemini.perform_model_task("VLM", folder_imgs=folder_imgs)
+        llm_task = llm_tasks_groq.perform_model_task("LLM", title=title, description=description, price_description=price_description)
+        vlm_task = llm_tasks_groq.perform_model_task("VLM", image_urls = image_urls)
         
         # Run concurrently VLM & LLM tasks
         (prod_info, llm_duration), (nutr_info, vlm_duration) = await asyncio.gather(llm_task, vlm_task)
@@ -145,10 +145,12 @@ async def get_item_info(page, section_items, subcategory, subsection_name):
     image_button = item_locator.locator("button.product-gallery__thumbnail")
     folder_imgs = str(BASE_DIR / "scraping" / "images" / f"{subsection_name}{item_id}")
     image_button_count = await image_button.count()
+    item_image_urls = []
     for i in range(image_button_count): 
         await image_button.nth(i).click()
         await asyncio.sleep(WAIT_TIME)
         img_url = await item_description_locator.locator("[data-testid='image-zoomer-container'] img").get_attribute("src")
+        item_image_urls.append(img_url)
         filename = f"{i}.jpg"
         await download_image(img_url, folder_imgs, filename)
 
@@ -185,7 +187,7 @@ async def get_item_info(page, section_items, subcategory, subsection_name):
         "origen": item_origin, 
         "link_producto": item_url,
         "folder_imgs": folder_imgs, 
-        #"image_urls": item_image_urls
+        "image_urls": item_image_urls
     }
 
     return item_info
@@ -214,7 +216,7 @@ async def get_items(page: Page,subcategory: str):
 
             prod_info, llm_duration, nutr_info, vlm_duration = await llm_vlm_task(
                 description = item_info["descripcion"],
-                folder_imgs = item_info["folder_imgs"], 
+                image_urls = item_info["image_urls"], 
                 price_description = item_info["descripcion_precio"], 
                 title = item_info["titulo"]
             )
@@ -245,7 +247,7 @@ async def get_items(page: Page,subcategory: str):
                 "Alergenos": prod_info["alergenos"], 
             }
 
-            #del item_info["image_urls"]
+            del item_info["image_urls"]
             item_info.update(nutr_info)
             item_info.update(prod_info)
             print(json.dumps(item_info, indent=4, ensure_ascii=False)) # Prety printing the dictionary with all the information (one line for each key, value)

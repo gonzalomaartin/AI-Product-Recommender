@@ -8,11 +8,11 @@ import json
 
 load_dotenv() 
 
-GROK_API_KEY = os.getenv("GROK_API_KEY")
-LLM_MODEL = os.getenv("REASONING_LLM_MODEL")
-VLM_MODEL = os.getenv("VLM_MODEL")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+LLM_MODEL = os.getenv("GROQ_LLM")
+VLM_MODEL = os.getenv("GROQ_VLM")
 
-client = groq.AsyncGroq(api_key=GROK_API_KEY)
+client = groq.AsyncGroq(api_key=GROQ_API_KEY)
 
 BASE_DIR = Path(__file__).resolve().parent
 prompt_file = BASE_DIR / "prompts"
@@ -24,12 +24,72 @@ with open(prompt_file / "VLM.txt", "r", encoding="utf-8") as file:
     vlm_prompt = file.read()
 
 
-async def generate_model_response(model, messages, retries=5, delay=1):
+async def generate_model_response(model, messages, task, retries=5, delay=1):
     for attempt in range(retries):
         try:
+            if task == "VLM": 
+                response_format = {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "nutritional_info",
+                        "strict": True,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "atributos": {
+                                    "type": "array",
+                                    "items": {"type": "string"}
+                                },
+                                "energia_kj": {"type": "number"},
+                                "energia_kcal": {"type": "number"},
+                                "grasas_g": {"type": "number"},
+                                "grasas_saturadas_g": {"type": "number"},
+                                "grasas_mono_g": {"type": "number"},
+                                "grasas_poli_g": {"type": "number"},
+                                "carbohidratos_g": {"type": "number"},
+                                "azucar_g": {"type": "number"},
+                                "fibra_g": {"type": "number"},
+                                "proteina_g": {"type": "number"},
+                                "sal_g": {"type": "number"}
+                            },
+                            "required": ["atributos", "energia_kj", "energia_kcal", "grasas_g", 
+                                       "grasas_saturadas_g", "grasas_mono_g", "grasas_poli_g",
+                                       "carbohidratos_g", "azucar_g", "fibra_g", "proteina_g", "sal_g"],
+                            "additionalProperties": False
+                        }
+                    }
+                }
+
+            else: 
+                response_format = {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "product_info",
+                        "strict": True,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "marca": {"type": "string"},
+                                "alergenos": {
+                                    "type": "array",
+                                    "items": {"type": "string"}
+                                },
+                                "precio_relativo": {
+                                    "type": "string",
+                                    "enum": ["muy barato", "barato", "estandar", "caro", "muy caro"]
+                                }
+                            },
+                            "required": ["marca", "alergenos", "precio_relativo"],
+                            "additionalProperties": False
+                        }
+                    }
+                }
+            
             resp = await client.chat.completions.create(
                 model = model,
                 messages = messages,
+                temperature = 0.1, 
+                response_format = response_format
             )
             print(resp)
             response = resp.choices[0].message.content.strip()
@@ -79,7 +139,8 @@ async def perform_model_task(task, **kwargs):
         messages = [
             {"role": "system", "content": prompt}, 
             {"role": "user", "content": user_info}
-            ]
+        ]
+
     else: 
         model = VLM_MODEL 
         prompt = vlm_prompt
@@ -90,6 +151,7 @@ async def perform_model_task(task, **kwargs):
         
     
         content_list = [{"type": "text", "text": prompt}]
+
         for url in image_urls[:5]: # Groq can only handle 5 images at max per request and the request needs to be < 20 MB
             content_list.append({
                 "type": "image_url", 
@@ -98,7 +160,7 @@ async def perform_model_task(task, **kwargs):
 
         messages = [{"role": "user", "content": content_list}]
 
-    resp = await generate_model_response(model, messages)
+    resp = await generate_model_response(model, messages, task)
     t1 = time.perf_counter()
     compute_time = round(t1 - t0, 2)
     if task == "LLM": 
