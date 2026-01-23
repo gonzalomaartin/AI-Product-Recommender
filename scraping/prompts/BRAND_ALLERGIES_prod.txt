@@ -41,6 +41,7 @@ Reglas:
   - Aceite de oliva virgen extra suele ser más caro que aceite refinado.
   - Productos premium (jamón ibérico, salmón salvaje, aceite virgen extra ecológico) suelen tener precios altos.
   - Productos básicos (arroz, harina, azúcar, aceite 0,4º) suelen tener precios bajos.
+  - **Todos los productos están comercializados en España, por lo que la comparación de precios debe basarse en los precios típicos del mercado español.**
 
 Comparación del precio:
 - 30% más bajo de lo normal para ese producto → "muy barato"

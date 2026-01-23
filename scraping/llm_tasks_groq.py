@@ -5,6 +5,7 @@ import asyncio
 from pathlib import Path
 import time 
 import json
+from pydantic import BaseModel
 
 load_dotenv() 
 
@@ -24,64 +25,44 @@ with open(prompt_file / "VLM.txt", "r", encoding="utf-8") as file:
     vlm_prompt = file.read()
 
 
+class VLMResponse(BaseModel): 
+    atributos: list[str]
+    energia_kj: int | None 
+    energia_kcal: int | None
+    grasas_g: float | None
+    grasas_saturadas_g: float | None 
+    grasas_mono_g: float | None
+    grasas_poli_g: float | None
+    carbohidratos_g: float | None
+    azucar_g: float | None
+    fibra_g: float | None
+    proteina_g: float | None
+    sal_g: float | None 
+
+class LLMResponse(BaseModel): 
+    marca: str | None
+    alergenos: list[str]
+    precio_relativo: str | None
+
+
 async def generate_model_response(model, messages, task, retries=5, delay=1):
     for attempt in range(retries):
         try:
             if task == "VLM": 
-                response_format = {
+                response_format={
                     "type": "json_schema",
                     "json_schema": {
-                        "name": "nutritional_info",
-                        "strict": True,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "atributos": {
-                                    "type": "array",
-                                    "items": {"type": "string"}
-                                },
-                                "energia_kj": {"type": "number"},
-                                "energia_kcal": {"type": "number"},
-                                "grasas_g": {"type": "number"},
-                                "grasas_saturadas_g": {"type": "number"},
-                                "grasas_mono_g": {"type": "number"},
-                                "grasas_poli_g": {"type": "number"},
-                                "carbohidratos_g": {"type": "number"},
-                                "azucar_g": {"type": "number"},
-                                "fibra_g": {"type": "number"},
-                                "proteina_g": {"type": "number"},
-                                "sal_g": {"type": "number"}
-                            },
-                            "required": ["atributos", "energia_kj", "energia_kcal", "grasas_g", 
-                                       "grasas_saturadas_g", "grasas_mono_g", "grasas_poli_g",
-                                       "carbohidratos_g", "azucar_g", "fibra_g", "proteina_g", "sal_g"],
-                            "additionalProperties": False
-                        }
+                        "name": "support_ticket_classification",
+                        "schema": VLMResponse.model_json_schema()
                     }
                 }
 
             else: 
-                response_format = {
+                response_format={
                     "type": "json_schema",
                     "json_schema": {
-                        "name": "product_info",
-                        "strict": True,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "marca": {"type": "string"},
-                                "alergenos": {
-                                    "type": "array",
-                                    "items": {"type": "string"}
-                                },
-                                "precio_relativo": {
-                                    "type": "string",
-                                    "enum": ["muy barato", "barato", "estandar", "caro", "muy caro"]
-                                }
-                            },
-                            "required": ["marca", "alergenos", "precio_relativo"],
-                            "additionalProperties": False
-                        }
+                        "name": "support_ticket_classification",
+                        "schema": LLMResponse.model_json_schema()
                     }
                 }
             
@@ -110,6 +91,11 @@ async def generate_model_response(model, messages, task, retries=5, delay=1):
         except groq.APIConnectionError as e:
             print("Failed to connect to Groq API:", e)
             raise
+        
+        except Exception as e: 
+            print(f"An error has ocurred: {e}")
+            print(f"Attempt: {attempt+1}/{retries}")
+            
 
     print("Max retries reached. Could not complete request.")
     return None
