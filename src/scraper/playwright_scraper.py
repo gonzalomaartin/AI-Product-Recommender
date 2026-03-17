@@ -6,28 +6,11 @@ from dotenv import load_dotenv
 import shutil 
 import json 
 
-from src.ai import groq_client
+from src.ai.orchestrator import orchestrate_AI_pipeline
 from src.database.db_operations import upload_product_relational_db, check_item_id, init_db, upload_product_vector_db, compute_embedding
 from src.scraper.utils import BASE_DIR, WAIT_TIME, POSTAL_CODE, DF_PATH, accept_cookies, fill_input, submit_form, download_image, load_dataframe
 
 load_dotenv()  # loads the .env file
-
-PROD_CONCURRENCY = 1 
-LLM_VLM_CONCURRENCY = 1
-prod_semaphore = asyncio.Semaphore(PROD_CONCURRENCY)
-llm_vlm_semaphore = asyncio.Semaphore(LLM_VLM_CONCURRENCY)
-    
-    
-async def llm_vlm_task(title, description,price_description, image_urls = None, folder_imgs = None):
-    async with llm_vlm_semaphore: 
-        # Create coroutines (but do not await yet)
-        llm_task = groq_client.perform_model_task("LLM", title=title, description=description, price_description=price_description)
-        vlm_task = groq_client.perform_model_task("VLM", image_urls = image_urls)
-        
-        # Run concurrently VLM & LLM tasks
-        (prod_info, llm_duration), (nutr_info, vlm_duration) = await asyncio.gather(llm_task, vlm_task)
-
-        return prod_info, llm_duration, nutr_info, vlm_duration
     
 
 async def get_categories(page: Page):
@@ -84,22 +67,8 @@ async def get_item_info(page, section_items, subcategory, subsection_name):
     """Extract detailed product information from the product detail page."""
     
     # === EXTRACTING PRODUCT ID ===
-    try:
-        item_url = page.url
-        item_id = re.search(r"/(\d+)", item_url).group(1)
-    except Exception as e:
-        raise RuntimeError(f"❌ Failed to extract product ID from URL '{page.url}': {e}")
-    
-    # === CHECKING IF PRODUCT EXISTS ON DB ===
-    try:
-        exists = check_item_id(item_id)
-        if exists:
-            print(f"⏭️ Product ID {item_id} already in database, skipping...")
-            await page.locator("[data-testid='modal-close-button']").click() 
-            await asyncio.sleep(WAIT_TIME)
-            return None 
-    except Exception as e:
-        print(f"⚠️ Failed to check if product {item_id} exists: {e}")
+    item_url = page.url
+    item_id = re.search(r"/(\d+)", item_url).group(1) # If this wasn't succesful, an error would be raised previously
     
     # === EXTRACTING TITLE & DESCRIPTION ===
     try:
@@ -225,56 +194,67 @@ async def get_items(page: Page, subcategory: str):
             # Click product to open details
             try:
                 await section_items.nth(z).locator("[data-testid='open-product-detail']").click()
+                await asyncio.sleep(WAIT_TIME)
             except Exception as e:
                 print(f"   ⏭️ Product {z} out of stock or unavailable: {e}")
                 continue
             
-            await asyncio.sleep(WAIT_TIME)
+                # === EXTRACTING PRODUCT ID ===
+            try:
+                item_url = page.url
+                item_id = re.search(r"/(\d+)", item_url).group(1)
+            except Exception as e:
+                raise RuntimeError(f"❌ Failed to extract product ID from URL '{page.url}': {e}")
+            
+            # === CHECKING IF PRODUCT EXISTS ON DB ===
+            try:
+                exists = check_item_id(item_id)
+                if exists:
+                    print(f"⏭️ Product ID {item_id} already in database, skipping...")
+                    await page.locator("[data-testid='modal-close-button']").click() 
+                    await asyncio.sleep(WAIT_TIME)
+                    return None 
+            except Exception as e:
+                print(f"⚠️ Failed to check if product {item_id} exists: {e}")
+
             item_info = await get_item_info(page, section_items, subcategory, subsection_name)
             if item_info is None: 
                 continue
             
             # Getting transformed and clean information
-            prod_info, llm_duration, nutr_info, vlm_duration = await llm_vlm_task(
-                description = item_info["descripcion"],
-                image_urls = item_info["image_urls"], 
-                price_description = item_info["descripcion_precio"], 
-                title = item_info["titulo"]
+            llm_info = await orchestrate_AI_pipeline(
+                relative_price=True, 
+                nutritional_info=True, 
+                allergens=True, 
+                title=item_info["titulo"], 
+                price_description=item_info["descripcion_precio"], 
+                image_urls=item_info["image_urls"], 
+                product_description=item_info["descripcion"]
             )
-            print(f"LLM call took {llm_duration:.2f} seconds.")
-            print(f"VLM call took {vlm_duration:.2f} seconds.")
-            item_info["tiempo_computo"] = max(llm_duration, vlm_duration)
 
             shutil.rmtree(item_info["folder_imgs"], ignore_errors=True)
             print(f"Directory {item_info["folder_imgs"]} deleted successfully")
             del item_info["folder_imgs"]
 
-            for k, v in prod_info.items(): 
+            for k, v in llm_info(): 
                 if isinstance(v, list):
-                    prod_info[k] = ", ".join(v) if v else "ninguno"
-
-            for k, v in nutr_info.items(): 
-                if isinstance(v, list):
-                    nutr_info[k] = ", ".join(v) if v else "ninguno"
+                    llm_info[k] = ", ".join(v) if v else "ninguno"
 
             # === PREPARING EMBEDDING TEXT ===
             item_embedding_text = {
                 "Titulo producto": item_info["titulo"], 
-                "Marca": prod_info["marca"], 
                 "Categoria": subcategory, 
                 "Subcategoria": subsection_name,
                 "Descripcion": item_info["descripcion"], 
                 "Peso": item_info["peso"], 
-                "Origen": item_info["origen"],  
-                "Alergenos": prod_info["alergenos"], 
+                "Origen": item_info["origen"]
             }
 
             del item_info["image_urls"]
-            item_info.update(nutr_info)
-            item_info.update(prod_info)
+            item_info.update(llm_info)
             print(json.dumps(item_info, indent=4, ensure_ascii=False)) # Prety printing the dictionary with all the information (one line for each key, value)
 
-            item_embedding_text.update(nutr_info)
+            item_embedding_text.update(llm_info)
             lines = []
             for k, v in item_embedding_text.items():
                 if k == "precio_relativo": 
@@ -283,7 +263,7 @@ async def get_items(page: Page, subcategory: str):
             
             # === COMPUTING EMBEDDING ===
             embedding_text = "\n".join(lines)
-            #print(f"Embedding information: \n {json.dumps(embedding_text, indent=4, ensure_ascii=False)}")
+            print(f"Embedding information: \n {json.dumps(embedding_text, indent=4, ensure_ascii=False)}")
             item_embedding = compute_embedding(embedding_text)
 
             # === UPLOADING TO VECTOR & RELATIONAL DB ===
@@ -296,10 +276,7 @@ async def get_items(page: Page, subcategory: str):
             await page.locator("[data-testid='modal-close-button']").click() 
             await asyncio.sleep(WAIT_TIME)
 
-
     return list_items
-
-
     
 
 async def run_single(url_start: str, postal_code: str = POSTAL_CODE):

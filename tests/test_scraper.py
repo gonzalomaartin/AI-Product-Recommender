@@ -1,7 +1,7 @@
 from playwright.async_api import async_playwright, Page
 import asyncio 
 import json 
-    
+
 from src.scraper.playwright_scraper import submit_form, get_item_info
 
 WAIT_TIME = 0.5
@@ -48,8 +48,11 @@ async def run_single(url_start: str, postal_code: str = "46013"):
         try: 
             item_info = await get_item_info(page, "", "", "")
             print(json.dumps(item_info, indent=4, ensure_ascii=False))
+            return item_info
         except Exception as e: 
             print(e)
+    
+
 
 
 if __name__ == "__main__": 

@@ -2,11 +2,15 @@ from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.output_parsers import PydanticOutputParser
 import asyncio 
+import logging 
 
 import src.ai.config as config 
 from src.ai.prompts import load_all_prompts
 from src.ai.schemas import NutritionalInfo, Allergens, RelativePrice
+
+logger = logging.getLogger(__name__)
 
 RELATIVE_PRICE_PROMPT, NUTRITIONAL_INFO_PROMPT, ALLERGENS_PROMPT = load_all_prompts()
 
@@ -30,40 +34,67 @@ async def orchestrate_AI_pipeline(relative_price: bool, nutritional_info: bool, 
 
 
 async def extract_relative_price(title: str, price_description: str) -> dict: 
-    llm = init_chat_model(config.RELATIVE_PRICE_MODEL, model_provider=config.RELATIVE_PRICE_PROVIDER, temperature=0)
-    structured_llm = llm.with_structured_output(RelativePrice)
+    try: 
+        llm = init_chat_model(config.RELATIVE_PRICE_MODEL, model_provider=config.RELATIVE_PRICE_PROVIDER, temperature=0)
+        structured_llm = llm.with_structured_output(RelativePrice)
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", RELATIVE_PRICE_PROMPT), 
-        ("human", "Titulo: {title} \n Descripcion titulo: {price_description}")
-    ])
-    chain = prompt | structured_llm 
-    return await chain.ainvoke(title=title, price_description=price_description)
+        prompt = ChatPromptTemplate.from_messages([
+            SystemMessage(content=RELATIVE_PRICE_PROMPT), 
+            ("human", "Titulo: {title} \n Descripcion titulo: {price_description}")
+        ])
+        chain = prompt | structured_llm 
+
+        # Pass a single input mapping object
+        input_object = {"title": title, "price_description": price_description}
+        return await chain.ainvoke(input_object)
+    
+    except Exception as e:
+        logger.exception(f"extract_relative_price failed: {e}")
+        raise
 
 
 async def extract_nutritional_info(image_urls: list[str]) -> dict: 
-    llm = init_chat_model(config.NUTRITIONAL_INFO_MODEL, model_provider=config.NUTRITIONAL_INFO_PROVIDER, temperature=0)
-    structured_llm = llm.with_structured_output(NutritionalInfo)
+    try: 
+        # Avoiding overflowing the context window with no extra information 
+        if len(image_urls) > 5: 
+            image_urls = image_urls[:5]
 
-    system_msg = SystemMessage(content=RELATIVE_PRICE_PROMPT)
+        llm = init_chat_model(config.NUTRITIONAL_INFO_MODEL, model_provider=config.NUTRITIONAL_INFO_PROVIDER, temperature=0)
+        structured_llm = llm.with_structured_output(NutritionalInfo)
 
-    human_msg = HumanMessage(
-        content=[
-            {"type": "text", "text": "Extrae la información nutricional"},
-            *[{"type": "image_url", "image_url": {"url": url}} for url in image_urls]
-        ]
-    )
-    messages = [system_msg, human_msg]
-    return await structured_llm.ainvoke(messages)
+        system_msg = SystemMessage(content=NUTRITIONAL_INFO_PROMPT)
+        human_msg = HumanMessage(
+            content=[
+                {"type": "text", "text": "Extrae la información nutricional"},
+                *[{"type": "image_url", "image_url": {"url": url}} for url in image_urls]
+            ]
+        )
+        prompt = ChatPromptTemplate.from_messages([
+            system_msg, 
+            human_msg
+        ])
+
+        chain = prompt | structured_llm
+        return await chain.ainvoke({})
+    
+    except Exception as e:
+        logger.exception(f"extract_nutritional_info failed: {e}")
+        raise
      
 
 async def extract_allergens(product_description: str) -> dict: 
-    llm = init_chat_model(config.ALLERGENS_MODEL, model_provider=config.ALLERGENS_PROVIDER, temperature=0)
-    structured_llm = llm.with_structured_output(Allergens)
+    try: 
+        llm = init_chat_model(config.ALLERGENS_MODEL, model_provider=config.ALLERGENS_PROVIDER, temperature=0) 
+        # Structured Output on an LLM is implemented as a tool and Llama3-70B hasn't been trained on tool calling and it fails
+        parser = PydanticOutputParser(pydantic_object=Allergens) # Manual parser instead of a tool 
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", RELATIVE_PRICE_PROMPT), 
-        ("human", "Descripcion del producto: {product_description}")
-    ])
-    chain = prompt | structured_llm 
-    return await chain.ainvoke(product_description=product_description)
+        prompt = ChatPromptTemplate.from_messages([
+            SystemMessage(content=ALLERGENS_PROMPT),
+            ("human", "Descripcion del producto: {product_description} \n {format_instructions}")
+        ])
+        chain = prompt | llm | parser
+        return await chain.ainvoke({"product_description": product_description, "format_instructions": parser.get_format_instructions()})
+    
+    except Exception as e: 
+        logger.exception(f"extract_allergens failed: {e}")
+        raise 
