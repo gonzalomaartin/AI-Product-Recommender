@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import chromadb
 from chromadb.config import Settings
 import os 
+from pathlib import Path 
 
 print("🔄 db_utils.py is being executed...")
 
@@ -15,7 +16,6 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 COLLECTION_NAME = os.getenv("COLLECTION_NAME")
 
 
-EMBEDDING_MODEL = "bge-m3"
 
 #engine = create_async_engine(DATABASE_URL)
 #SessionLocal = async_sessionmaker(autoflush=True, bind=engine, expire_on_commit=False)
@@ -65,7 +65,7 @@ class Product(Base): # Explore if you're going to save it in one or two tables
 
 
 # Ensure the parent directory exists
-persist_directory = "databases/chroma_db"
+persist_directory = Path.cwd() / "data" / "chroma_db"
 os.makedirs(os.path.dirname(persist_directory), exist_ok=True)
 
 # Use persistent local directory

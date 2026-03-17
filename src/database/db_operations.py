@@ -1,9 +1,14 @@
-from .db_utils import Base, engine, SessionLocal, Product, collection, EMBEDDING_MODEL
+from .db_utils import Base, engine, SessionLocal, Product, collection
 import ollama
 import psycopg2
 import asyncpg
+from sentence_transformers import SentenceTransformer
+
 
 print("🔄 db_operations.py is being executed...")
+
+embedding_model = SentenceTransformer("BAAI/bge-m3")
+
 
 def init_db():
     try:
@@ -58,15 +63,11 @@ def check_item_id(item_id):
 def upload_product_vector_db(product_id, embedding): 
     collection.add(
         ids=[product_id],
-        embeddings=embedding ,
+        embeddings=embedding,
         metadatas=[None]
     )
     print(f"✅ Successfully uploaded product {product_id} to the vector database.")
 
 
 def compute_embedding(embedding_text): 
-    item_embedding = ollama.embed(
-        model = EMBEDDING_MODEL, 
-        input = embedding_text
-    )
-    return item_embedding.embeddings
+    return embedding_model.encode(embedding_text)

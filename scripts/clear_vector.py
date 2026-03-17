@@ -1,4 +1,4 @@
-from databases.db_utils import collection
+from src.database.db_utils import collection
 
 def clear_chromadb():
     try:

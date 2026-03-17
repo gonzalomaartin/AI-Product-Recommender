@@ -1,4 +1,4 @@
-from databases.db_utils import SessionLocal, Base, engine
+from src.database.db_utils import SessionLocal, Base, engine
 
 def clear_postgresql():
     try:

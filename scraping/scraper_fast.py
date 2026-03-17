@@ -12,7 +12,7 @@ import json
 import time
 from pprint import pprint, PrettyPrinter
 from dotenv import load_dotenv
-from databases.db_operations import upload_product_relational_db, check_item_id, init_db, upload_product_vector_db, compute_embedding
+from src.database.db_operations import upload_product_relational_db, check_item_id, init_db, upload_product_vector_db, compute_embedding
 import traceback
 import shutil 
 

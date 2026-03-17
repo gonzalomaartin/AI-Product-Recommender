@@ -5,7 +5,9 @@ import asyncio
 from pathlib import Path
 import time 
 import json
-from pydantic import BaseModel
+
+from src.ai.schemas import LLMResponse, VLMResponse 
+
 
 load_dotenv() 
 
@@ -24,25 +26,6 @@ with open(prompt_file / "BRAND_ALLERGIES_prod.txt", "r", encoding="utf-8") as fi
 with open(prompt_file / "VLM.txt", "r", encoding="utf-8") as file:
     vlm_prompt = file.read()
 
-
-class VLMResponse(BaseModel): 
-    atributos: list[str]
-    energia_kj: int | None 
-    energia_kcal: int | None
-    grasas_g: float | None
-    grasas_saturadas_g: float | None 
-    grasas_mono_g: float | None
-    grasas_poli_g: float | None
-    carbohidratos_g: float | None
-    azucar_g: float | None
-    fibra_g: float | None
-    proteina_g: float | None
-    sal_g: float | None 
-
-class LLMResponse(BaseModel): 
-    marca: str | None
-    alergenos: list[str]
-    precio_relativo: str | None
 
 
 async def generate_model_response(model, messages, task, retries=5, delay=1):
@@ -81,7 +64,7 @@ async def generate_model_response(model, messages, task, retries=5, delay=1):
                 return json.loads(response)
             
         except groq.RateLimitError as e:
-            print(f"Rate limit hit. Retry {attempt+1}/{retries} in {delay}s...")
+            print(f"Rate limit hit: {e}. Retry {attempt+1}/{retries} in {delay}s...")
             await asyncio.sleep(delay)
             delay *= 2
         except groq.APIStatusError as e:
@@ -155,3 +138,8 @@ async def perform_model_task(task, **kwargs):
         print(f"Response from VLM: {resp}")
     
     return resp, compute_time
+
+
+
+async def LLM_pipeline(): 
+    ...

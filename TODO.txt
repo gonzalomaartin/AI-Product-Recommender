@@ -1,0 +1,14 @@
+FUNCTIONAL: 
+
+-Make the scraper modular by dividing it into functions, which makes testing and understanding the code much easier, 
+specially for extracting information from a product (make it supermarket agnostic)
+-If something in the scraper fails, retry that component 3 times if it's something normal and 5 if there's more variability (LLMs),
+each function should have its max retries 
+
+
+
+ARCHITECTURE: 
+-Use the async engine from PostgreSQL -> NeonDB
+-Use LangChain instead of manually handling every connection 
+-Use LLamaIndex to handle the vector database connection and retrieving 
+-Migrate the vector database to qdrant
