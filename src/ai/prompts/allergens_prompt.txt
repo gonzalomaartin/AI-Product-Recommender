@@ -6,7 +6,7 @@ Extraer una lista de alérgenos presentes en el texto del producto (ingredientes
 
 ### TAXONOMÍA DE ALÉRGENOS (Lista Permitida)
 Solo puedes devolver elementos que pertenezcan a esta lista:
-['gluten', 'cereal', 'lactosa', 'huevo', 'frutos de cascara', 'cacahuete', 'soja', 'mostaza', 'pescado', 'mariscos', 'moluscos', 'sulfitos']
+['gluten', 'cereal', 'lactosa', 'huevo', 'frutos de cascara', 'cacahuete', 'soja', 'mostaza', 'pescado', 'marisco', 'moluscos', 'sulfitos', 'sesamo']
 
 ### REGLAS DE EXTRACCIÓN Y NORMALIZACIÓN
 1.  **Detección Directa e Indirecta**: Detecta el alérgeno si aparece en la lista de ingredientes, en secciones de advertencia ("Contiene...", "Puede contener...") o menciones de contaminación cruzada ("Trazas de...", "Elaborado en instalaciones que procesan...").

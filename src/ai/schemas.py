@@ -6,8 +6,6 @@ class NutritionalInfo(BaseModel):
     energia_kcal: int | None
     grasas_g: float | None
     grasas_saturadas_g: float | None 
-    grasas_mono_g: float | None
-    grasas_poli_g: float | None
     carbohidratos_g: float | None
     azucar_g: float | None
     fibra_g: float | None

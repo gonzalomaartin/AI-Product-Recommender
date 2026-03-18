@@ -5,6 +5,7 @@ specially for extracting information from a product (make it supermarket agnosti
 -Use run_scraper_pipeline to make the scraping
 -If something in the scraper fails, retry that component 3 times if it's something normal and 5 if there's more variability (LLMs),
 each function should have its max retries 
+-Remove grasas_mono y grasas_poli from the schema, prompt and ground truth dataset as it's only presents in oil (not worth it calculating)
 
 
 

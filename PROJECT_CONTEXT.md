@@ -301,32 +301,53 @@ Set the following in `.env`:
 
 ```
 Mercadona-LLM/
-├── scraping/
-│   ├── scraper_fast_cloud.py       # Main scraper orchestrator
-│   ├── scraper.py                  # Alternative scraper
-│   ├── llm_tasks_groq.py           # Groq LLM/VLM integration
-│   ├── llm_tasks_gemini.py         # Google Gemini integration
-│   ├── nutritional_info_vlm.py     # Ollama VLM integration
-│   ├── product_info_llm.py         # Product LLM tasks
-│   ├── utils.py                    # Utility functions
-│   ├── prompts/                    # Prompt templates
-│   │   ├── BRAND_ALLERGIES_prod.txt
-│   │   └── VLM.txt
-│   └── images/                     # Downloaded product images
-├── databases/
-│   ├── db_utils.py                 # Database setup & models
-│   ├── db_operations.py            # Database operations
-│   ├── clear_vector.py             # Clear Chroma DB
-│   ├── clear_relational.py         # Clear PostgreSQL
-│   ├── chroma_db/                  # Vector DB persistence
-│   └── products.csv                # Exported data
-├── backend/                        # Backend API (if applicable)
-├── frontend/                       # Frontend (if applicable)
-├── tests/                          # Test suite
-├── .env                            # Environment variables
-├── requirements.txt                # Python dependencies
-├── README.md                       # Project README
-└── PROJECT_CONTEXT.md             # This document
+├── data/                       # 📁 Datos generados/descargados (Añadir a .gitignore)
+│   ├── images/                 # Imágenes de productos descargadas
+│   ├── chroma_db/              # Base de datos vectorial persistente
+│   └── exports/                # products.csv y otros volcados de datos
+│
+├── scripts/                    # 🛠️ Scripts de mantenimiento y utilidades aisladas
+│   ├── clear_vector_db.py      # Movido desde databases/
+│   ├── clear_relational_db.py  # Movido desde databases/
+│   ├── init_db.py              # Script aislado para inicializar la BD
+│   └── run_pipeline.py         # Orquestador principal del ETL (Scraping -> AI -> DB)
+│
+├── src/                        # 💻 Código fuente principal del proyecto
+│   ├── core/                   # Configuración y utilidades globales
+│   │   ├── config.py           # Gestión de variables de .env y constantes
+│   │   └── utils.py            # Funciones genéricas (movidas desde scraping/utils.py)
+│   │
+│   ├── scraper/                # Dominio 1: Extracción de datos
+│   │   ├── playwright_scraper.py # Tu scraper_fast_cloud.py refactorizado
+│   │   └── exceptions.py       # Manejo de errores de red/scraping
+│   │
+│   ├── ai/                     # Dominio 2: Inteligencia Artificial (LLM/VLM)
+│   │   ├── groq_client.py      # Lógica de llm_tasks_groq.py
+│   │   ├── gemini_client.py    # Lógica de llm_tasks_gemini.py
+│   │   ├── schemas.py          # Modelos Pydantic (VLMResponse, LLMResponse)
+│   │   └── prompts/            # Carpeta con BRAND_ALLERGIES_prod.txt, VLM.txt, etc.
+│   │
+│   ├── db/                     # Dominio 3: Capa de persistencia
+│   │   ├── models.py           # Esquema SQLAlchemy de la tabla 'Product'
+│   │   ├── relational.py       # Conexiones y operaciones PostgreSQL/SQLite
+│   │   └── vector.py           # Conexiones y operaciones ChromaDB
+│   │
+│   └── api/                    # Dominio 4: Backend (Futuro a corto plazo)
+│       ├── routes/             # Endpoints para la búsqueda semántica
+│       └── main.py             # Entrada de FastAPI / Flask
+│
+├── frontend/                   # 🖥️ Interfaz de usuario (Streamlit, React, etc.)
+├── tests/                      # 🧪 Pruebas automatizadas (Próximo paso según tus notas)
+│   ├── test_scraper/
+│   ├── test_ai/
+│   └── test_db/
+│
+├── .env                        # Variables de entorno (No subir a Git)
+├── .env.example                # Plantilla de variables de entorno para nuevos devs
+├── .gitignore                  # Ignorar /data, .env, __pycache__, etc.
+├── requirements.txt            # Dependencias
+├── README.md                   # Documentación principal
+└── PROJECT_CONTEXT.md          # Contexto del proyecto
 ```
 
 ---

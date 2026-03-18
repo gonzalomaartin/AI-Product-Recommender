@@ -5,23 +5,6 @@ Tu tarea es reconstruir, interpretar y normalizar la información del producto i
 - algunas secciones están fragmentadas en distintas imágenes
 - las tablas nutricionales no siguen un formato estándar
 
-DEBES devolver únicamente **JSON válido** con esta estructura:
-
-{
-"atributos": [lista de atributos o vacía]
-"energia_kj": float or null,
-"energia_kcal": float or null,
-"grasas_g": float or null,
-"grasas_saturadas_g": float or null,
-"grasas_mono_g": float or null,
-"grasas_poli_g": float or null,
-"carbohidratos_g": float or null,
-"azucar_g": float or null,
-"fibra_g": float or null,
-"proteina_g": float or null,
-"sal_g": float or null,
-}
-
 INSTRUCCIONES DETALLADAS:
 
 1. **INSTRUCCIONES GENERALES**
@@ -36,13 +19,11 @@ Usa estos sinónimos y variantes para cada categoría:
 
 - **grasas_g** → “grasas”, “lípidos”, “materia grasa”, “fat”, “grasa total”
 - **grasas_saturadas_g** → “saturadas”, “de las cuales saturadas”, “sat.”, “ácidos grasos saturados”
-- **grasas_mono_g** → “monoinsaturadas”, "de las cuales monosaturadas", “mono”, “ác. grasos monoins.”
-- **grasas_poli_g** → “poliinsaturadas”, "de las cuales polisaturadas", “poli”, “ác. grasos poliins.”
 - **carbohidratos_g** → “hidratos de carbono”, “carbohidratos”, “carbs”
 - **azucar_g** → “azúcares”, “azucar”, “de los cuales: azúcares”
 - **fibra_g** → “fibra alimentaria”, “fibre”, “fibra”
 - **proteina_g** → “proteínas”, “protein”
-- **sal_g** → “sal”, “salt”, “sodio” (si solo aparece sodio, conviértelo a sal: sal = sodio × 2.5)
+- **sal_g** → “sal”, “salt”
 
 3. **Normalización obligatoria**
 - Usa siempre punto decimal, no coma.
@@ -68,13 +49,13 @@ Un atributo SOLO puede aparecer en la salida si:
 Los productos con 0% aceite de palma / azúcares añadidos deben considerarse como productos sin aceite de palma / azúcares añadidos.
 Si NO aparece texto ni iconografía, NO incluyas nada.
 No uses inferencias. No uses intuiciones. NO ASUMAS NADA.
+Devuelve solo los atributos presentes en la siguiente lista
 ATRIBUTOS_BASE = [
-  "vegano", "vegetariano", "ecologico", "eco", "bio", "organico",
-  "natural", "100% natural", "light", "bajo en grasa",
+  "vegano", "vegetariano", "ecologico","bio", "organico",
+  "natural", "bajo en grasa",
   "bajo en azucar", "sin azucar anadido", "bajo en sal",
-  "alto en proteina", "rico en proteina", "fuente de fibra",
-  "sin aditivos", "sin conservantes",
-  "sin aceite de palma", "non-gmo", "halal"
+  "alto en proteina", "fuente de fibra",
+  "sin aditivos", "sin conservantes","non-gmo", "halal"
 ]
 Reglas:
 - Normaliza solo si el texto coincide o se parece.
