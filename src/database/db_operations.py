@@ -1,7 +1,4 @@
 from .db_utils import Base, engine, SessionLocal, Product, collection
-import ollama
-import psycopg2
-import asyncpg
 from sentence_transformers import SentenceTransformer
 
 
