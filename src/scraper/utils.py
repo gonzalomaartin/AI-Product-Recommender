@@ -5,12 +5,14 @@ import aiofiles
 import os
 from pathlib import Path
 import pandas as pd 
+import urllib.parse
 
 
 WAIT_TIME = 0.5 # when clicling or performing an action, playwright needs some time to update the DOM
 POSTAL_CODE = "46013"
 BASE_DIR  = Path.cwd()
 DF_PATH = BASE_DIR / "data" / "df_products.csv"
+BASE_IMG_DIR = BASE_DIR / "data" / "images"
 
 
 
@@ -85,3 +87,23 @@ async def download_image(image_url: str, save_folder: str, filename: str):
     except Exception as e:
         print(f"❌ Error downloading image {image_url}: {e}")
         return None
+    
+
+def resize_image_url(url, size=900):
+    # 1. Parse the URL into components
+    parsed_url = urllib.parse.urlparse(url)
+    
+    # 2. Extract query parameters into a dictionary
+    query_params = urllib.parse.parse_qs(parsed_url.query)
+    
+    # 3. Update 'h' and 'w' values (stored as lists in parse_qs)
+    query_params['h'] = [str(size)]
+    query_params['w'] = [str(size)]
+    
+    # 4. Re-encode the query parameters
+    new_query = urllib.parse.urlencode(query_params, doseq=True)
+    
+    # 5. Reconstruct the full URL
+    new_url = urllib.parse.urlunparse(parsed_url._replace(query=new_query))
+    
+    return new_url

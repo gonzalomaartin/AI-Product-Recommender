@@ -22,7 +22,7 @@ async def fill_input(page: Page, value: str, wait_time: int = WAIT_TIME):
         await page.screenshot(path = "fill.png")
         return False
 
-async def run_single(url_start: str, postal_code: str = "46013"):
+async def run_single_scrape(url_start: str, postal_code: str = "46013"):
     print("Running single")
     async with async_playwright() as p: #doesn't need to close the browser manually
         browser = await p.chromium.launch(headless = False) 
@@ -56,4 +56,4 @@ async def run_single(url_start: str, postal_code: str = "46013"):
 
 
 if __name__ == "__main__": 
-    asyncio.run(run_single("https://tienda.mercadona.es/product/3505.2/14-sandia-baja-semillas-14-pieza"))
+    asyncio.run(run_single_scrape("https://tienda.mercadona.es/product/3505.2/14-sandia-baja-semillas-14-pieza"))

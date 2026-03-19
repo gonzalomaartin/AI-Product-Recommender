@@ -8,7 +8,7 @@ import json
 
 from src.ai.orchestrator import orchestrate_AI_pipeline
 from src.database.db_operations import upload_product_relational_db, check_item_id, init_db, upload_product_vector_db, compute_embedding
-from src.scraper.utils import BASE_DIR, WAIT_TIME, POSTAL_CODE, DF_PATH, accept_cookies, fill_input, submit_form, download_image, load_dataframe
+from src.scraper.utils import BASE_IMG_DIR, WAIT_TIME, POSTAL_CODE, DF_PATH, accept_cookies, fill_input, submit_form, download_image, load_dataframe, resize_image_url
 
 load_dotenv()  # loads the .env file
     
@@ -92,16 +92,11 @@ async def get_item_info(page, section_items, subcategory, subsection_name):
         raise RuntimeError(f"❌ Failed to extract size/price info for product {item_id}: {e}")
     
     # === EXTRACT & DOWNLOAD IMAGES ===
-    folder_imgs = str(BASE_DIR / "data" / "images" / f"{subsection_name}{item_id}")
-    item_image_urls = []
+    folder_imgs = str(BASE_IMG_DIR / f"{subsection_name}{item_id}")
     try:
-        image_button = item_locator.locator("button.product-gallery__thumbnail")
-        image_button_count = await image_button.count()
-        for i in range(image_button_count): 
-            await image_button.nth(i).click()
-            await asyncio.sleep(WAIT_TIME)
-            img_url = await item_description_locator.locator("[data-testid='image-zoomer-container'] img").get_attribute("src")
-            item_image_urls.append(img_url)
+        div_images_locator = page.locator(".product-gallery-thumbnails img")
+        item_images_urls = [resize_image_url(img.get_attribute("src"), 900) for img in div_images_locator.all()]
+        for i, img_url in enumerate(item_images_urls): 
             filename = f"{i}.jpg"
             await download_image(img_url, folder_imgs, filename)
     except Exception as e:
@@ -153,7 +148,7 @@ async def get_item_info(page, section_items, subcategory, subsection_name):
         "origen": item_origin, 
         "link_producto": item_url,
         "folder_imgs": folder_imgs, 
-        "image_urls": item_image_urls
+        "image_urls": item_images_urls
     }
 
     return item_info
@@ -226,6 +221,7 @@ async def get_items(page: Page, subcategory: str):
                 relative_price=True, 
                 nutritional_info=True, 
                 allergens=True, 
+                product_ID=item_info["ID_producto"],
                 title=item_info["titulo"], 
                 price_description=item_info["descripcion_precio"], 
                 image_urls=item_info["image_urls"], 

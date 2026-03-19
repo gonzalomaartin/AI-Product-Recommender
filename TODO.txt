@@ -6,6 +6,7 @@ specially for extracting information from a product (make it supermarket agnosti
 -If something in the scraper fails, retry that component 3 times if it's something normal and 5 if there's more variability (LLMs),
 each function should have its max retries 
 -Remove grasas_mono y grasas_poli from the schema, prompt and ground truth dataset as it's only presents in oil (not worth it calculating)
+-The eval can't depend on a test, I should create a utils function or something that handles getting information from a single product
 
 
 
@@ -14,3 +15,4 @@ ARCHITECTURE:
 -Use LangChain instead of manually handling every connection 
 -Use LLamaIndex to handle the vector database connection and retrieving 
 -Migrate the vector database to qdrant
+-Create a syncronous version of the scraper and implement multithreading (for the LLMs it doesn't make sense as it is I/O bounded)
