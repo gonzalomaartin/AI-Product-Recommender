@@ -8,8 +8,8 @@ import sys
 from evals.evaluators import (
     compare_exact_str, compare_lists, compare_subjective, compare_numbers
 )
-from evals.metrics import calculate_metrics, export_csv, export_metrics_summary, print_evaluation_summary, field_info
-from tests.test_ai import run_single_scrape
+from evals.metrics import calculate_metrics, export_csv, export_summary, print_evaluation_summary, field_info
+from tests.test_ai import test_ai
 
 
 BASE_PATH = Path.cwd()
@@ -33,10 +33,12 @@ def run_evaluations(limit: int = None):
     print_evaluation_summary(results)
 
     metrics_summary = calculate_metrics(results)
+    
+    print(f"\n📁 Saving the reports")
+    export_summary(metrics_summary, "metrics")
+    export_summary(results, "raw_results")
 
-    export_metrics_summary(metrics_summary)
-
-    print(f"✅ Evaluation complete!\n")
+    print(f"\n✅ Evaluation complete!")
     
 
 async def run_batch_evaluation(df: pd.DataFrame):
@@ -57,41 +59,36 @@ async def run_batch_evaluation(df: pd.DataFrame):
 
 async def run_single_evaluation(product_url: str, ground_truth: dict, current: int, total: int):
     """Evaluate a single product."""
-    product_id = ground_truth.get("ID_producto", "unknown")
+    product_ID = ground_truth.get("ID_producto", "unknown")
     
     # Progress
     progress = f"[{current+1}/{total}]"
-    print(f"{progress} Evaluating {product_id}...", end="", flush=True)
+    print(f"{progress} Evaluating {product_ID}...", end="", flush=True)
     
     try:
-        predicted = await run_single_scrape(product_url)
+        predicted = await test_ai(product_url, product_ID)
         
         # Run comparisons
         comparisons = {}
         for k, v in field_info.items(): 
             if v == "exact": 
-                comparisons[k] = compare_exact_str(predicted[k], ground_truth[k])
+                comparisons[k] = compare_exact_str(predicted[k], ground_truth[k], k)
             elif v == "subjective": 
-                comparisons[k] = compare_subjective(predicted[k], ground_truth[k])
-            elif v == "lists": 
-                comparisons[k] = compare_lists(predicted[k], ground_truth[k])
+                comparisons[k] = compare_subjective(predicted[k], ground_truth[k], k)
+            elif v == "list": 
+                comparisons[k] = compare_lists(predicted[k], ground_truth[k], k)
             else: 
-                comparisons[k] = compare_numbers(predicted[k], ground_truth[k])
+                comparisons[k] = compare_numbers(predicted[k], ground_truth[k], k)
         
         return {
-            "product_id": product_id,
+            "product_id": product_ID,
             "url": product_url,
             "comparisons": comparisons
         }
     
     except Exception as e:
-        print(f" ✗ ERROR: {e}")
-        return {
-            "product_id": product_id,
-            "url": product_url,
-            "comparisons": {},
-            "error": str(e),
-        }
+        print(f" ✗ ERROR evaluating {product_ID}: {e}")
+        raise 
 
 
 if __name__ == "__main__":

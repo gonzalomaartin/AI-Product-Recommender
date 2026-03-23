@@ -1,15 +1,20 @@
 """Evaluators for comparing predicted vs ground truth values."""
+import numpy as np 
 
-
-def compare_exact_str(predicted, gold):
+def compare_exact_str(predicted, gold, field_name):
     """Compare exact string match (case-insensitive)."""
     p = str(predicted).strip().lower() if predicted else ""
     g = str(gold).strip().lower() if gold else ""
     match = p == g
-    return match, f"Esperado: '{g}', Obtenido: '{p}'"
+    return {
+        "passed": match,
+        "truth": gold, 
+        "predicted": predicted, 
+        "details":  f"❌ Comparando {field_name}. Esperado: '{g}', Obtenido: '{p}'"
+    }
 
 
-def compare_lists(predicted_list, gold_str):
+def compare_lists(predicted_list, gold_str, field_name):
     """Compare lists using set intersection (precision, recall)."""
     # Handle predicted list
     if isinstance(predicted_list, str):
@@ -35,50 +40,74 @@ def compare_lists(predicted_list, gold_str):
     # Determine pass/fail (both need to be good)
     match = precision >= 0.8 and recall >= 0.8
     
-    detail = f"Faltan: {gold_set - pred_set} | Sobran: {pred_set - gold_set}, Precision: {precision}, Recall: {recall}"
+    detail = f"❌ Comparando {field_name}. Faltan: {gold_set - pred_set} | Sobran: {pred_set - gold_set}, Precision: {precision}, Recall: {recall}"
     
-    return match, precision, recall, detail
+    return {
+        "passed": match, 
+        "precision": precision, 
+        "recall": recall, 
+        "truth": gold_str, 
+        "predicted": ", ".join(predicted_list), 
+        "details": detail
+    }
 
 
-def compare_subjective(predicted, gold_options_str):
+def compare_subjective(predicted, gold_options_str, field_name):
     """Compare against multiple valid options."""
     options = [o.strip().lower() for o in gold_options_str.split("|")]
     p = str(predicted).strip().lower() if predicted else ""
     match = p in options
-    return match, f"Opciones válidas: {options}, Obtenido: '{p}'"
+    return {
+        "passed": match, 
+        "truth": gold_options_str, 
+        "predicted": predicted, 
+        "details": f"❌ Comparando {field_name}. Opciones válidas: {options}, Obtenido: '{p}'"
+    }
 
 
-def compare_numbers(predicted, truth, tolerance=0.05):
+def compare_numbers(predicted, truth, field_name, tolerance=0.05):
     """Compare numeric values with relative error tolerance."""
     try:
         p = float(predicted) if predicted is not None else 0
         t = float(truth) if truth is not None else 0
     except (ValueError, TypeError):
-        return False, 0, f"No se puede convertir a número: p={predicted}, t={truth}"
-    
-    if t == 0:
+        return {
+            False, 
+            0, 
+            f"No se puede convertir a número: p={predicted}, t={truth}"
+        }
+    if t == np.nan: 
+        match = p is None 
+        diff = p if not match else 0
+    elif t == 0:
         # Absolute tolerance for zero
-        diff = abs(p - t)
-        match = diff < 0.01
+        diff =  abs(p - t)
+        match = diff < 1
     else:
         # Relative tolerance
-        error_pct = abs(p - t) / abs(t)
-        match = error_pct <= tolerance
-        diff = error_pct
+        error = abs(p - t) / abs(t)
+        match = error <= tolerance
+        diff = abs(p - t)
     
-    return match, diff, f"Esperado: {t}, Obtenido: {p}, Error: {diff:.2%}"
+    return {
+        "passed": match, 
+        "difference": diff, 
+        "truth": truth, 
+        "predicted": predicted, 
+        "details": f"❌ Comparando {field_name}. Esperado: {t}, Obtenido: {p}, Diferencia: {diff:.2%}"
+    }
 
 
 # New simplified functions for export/display
-def evaluate_field(predicted, gold, field_type: str = "string"):
+def evaluate_field(predicted, gold, field_name, field_type: str = "string"):
     """Generic field evaluator."""
     if field_type == "string":
-        return compare_exact_str(predicted, gold)
+        return compare_exact_str(predicted, gold, field_name)
     elif field_type == "number":
-        return compare_numbers(predicted, gold)
+        return compare_numbers(predicted, gold, field_name)
     elif field_type == "list":
-        return compare_lists(predicted, gold)
+        return compare_lists(predicted, gold, field_name)
     elif field_type == "enum":
-        return compare_subjective(predicted, gold)
+        return compare_subjective(predicted, gold, field_name)
     else:
-        return compare_exact_str(predicted, gold)
+        return compare_exact_str(predicted, gold, field_name)

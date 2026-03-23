@@ -16,7 +16,7 @@ RELATIVE_PRICE_PROMPT, NUTRITIONAL_INFO_PROMPT, ALLERGENS_PROMPT = load_all_prom
 
 
 async def orchestrate_AI_pipeline(relative_price: bool, nutritional_info: bool, allergens: bool, product_ID: str,  **kwargs) -> dict: 
-    print(f"Starting the AI pipeline for product {product_ID}")
+    print(f"⚙️ Starting the AI pipeline for product {product_ID}")
 
     product_info = dict() 
     coroutines = []
@@ -36,7 +36,7 @@ async def orchestrate_AI_pipeline(relative_price: bool, nutritional_info: bool, 
 
 
 async def extract_relative_price(title: str, price_description: str, max_attempts = 3, wait_time = 30) -> dict: 
-    print("Extracting the relative price")
+    print("➡️ Extracting the relative price")
     attempts = 0
 
     llm = init_chat_model(config.RELATIVE_PRICE_MODEL, model_provider=config.RELATIVE_PRICE_PROVIDER, temperature=0)
@@ -55,7 +55,7 @@ async def extract_relative_price(title: str, price_description: str, max_attempt
             return await chain.ainvoke(input_object)
         except Exception as e:
             attempts += 1
-            logger.warning(f"Attempt {attempts} of extract_relative_price failed: {e}")
+            logger.warning(f"🔁 Attempt {attempts} of extract_relative_price failed: \n{e}")
             if attempts >= max_attempts:
                 logger.exception(f"extract_relative_price failed after {max_attempts} attempts")
                 raise
@@ -63,7 +63,7 @@ async def extract_relative_price(title: str, price_description: str, max_attempt
 
 
 async def extract_nutritional_info(image_urls: list[str], max_attempts = 3, wait_time = 30) -> dict: 
-    print("Extracting the nutritional information")
+    print("➡️ Extracting the nutritional information")
     attempts = 0
 
     # Avoiding overflowing the context window with no extra information 
@@ -91,7 +91,7 @@ async def extract_nutritional_info(image_urls: list[str], max_attempts = 3, wait
             return await chain.ainvoke({})
         except Exception as e:
             attempts += 1
-            logger.warning(f"Attempt {attempts} of extract_nutritional_info failed: {e}")
+            logger.warning(f"🔁 Attempt {attempts} of extract_nutritional_info failed: \n{e}")
             if attempts >= max_attempts:
                 logger.exception(f"extract_nutritional_info failed after {max_attempts} attempts")
                 raise
@@ -99,7 +99,7 @@ async def extract_nutritional_info(image_urls: list[str], max_attempts = 3, wait
      
 
 async def extract_allergens(product_description: str, max_attempts = 3, wait_time = 30) -> dict: 
-    print("Extracting the allergens")
+    print("➡️ Extracting the allergens")
     attempts = 0
 
     llm = init_chat_model(config.ALLERGENS_MODEL, model_provider=config.ALLERGENS_PROVIDER, temperature=0) 
@@ -119,7 +119,7 @@ async def extract_allergens(product_description: str, max_attempts = 3, wait_tim
             })
         except Exception as e:
             attempts += 1
-            logger.warning(f"Attempt {attempts} of extract_allernges failed: {e}")
+            logger.warning(f"🔁 Attempt {attempts} of extract_allernges failed: \n{e}")
             if attempts >= max_attempts:
                 logger.exception(f"extract_allergens failed after {max_attempts} attempts")
                 raise

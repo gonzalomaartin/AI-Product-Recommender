@@ -95,7 +95,7 @@ async def get_item_info(page, section_items, subcategory, subsection_name):
     folder_imgs = str(BASE_IMG_DIR / f"{subsection_name}{item_id}")
     try:
         div_images_locator = page.locator(".product-gallery-thumbnails img")
-        item_images_urls = [resize_image_url(img.get_attribute("src"), 900) for img in div_images_locator.all()]
+        item_images_urls = [resize_image_url(await img.get_attribute("src"), 900) for img in await div_images_locator.all()]
         for i, img_url in enumerate(item_images_urls): 
             filename = f"{i}.jpg"
             await download_image(img_url, folder_imgs, filename)
@@ -229,7 +229,7 @@ async def get_items(page: Page, subcategory: str):
             )
 
             shutil.rmtree(item_info["folder_imgs"], ignore_errors=True)
-            print(f"Directory {item_info["folder_imgs"]} deleted successfully")
+            print(f"📁 Directory {item_info["folder_imgs"]} deleted successfully")
             del item_info["folder_imgs"]
 
             for k, v in llm_info(): 

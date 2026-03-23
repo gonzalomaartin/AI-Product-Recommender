@@ -2,15 +2,19 @@ import json
 import asyncio 
 from src.ai.orchestrator import orchestrate_AI_pipeline
 from tests.test_scraper import run_single_scrape
+import re
 
 TEST_URL = "https://tienda.mercadona.es/product/22966/cereales-copos-maiz-corn-flakes-hacendado-0-azucares-anadidos-caja"
 
-async def test_ai(url): 
+async def test_ai(url, product_ID = None):
+    if not product_ID: 
+        product_ID = re.search(r"/(\d+)", url).group(1)
     item_info = await run_single_scrape(url)
     llm_info = await orchestrate_AI_pipeline(
         relative_price=True, 
         nutritional_info=True, 
         allergens=True, 
+        product_ID=product_ID,
         title=item_info["titulo"], 
         price_description=item_info["descripcion_precio"], 
         image_urls=item_info["image_urls"], 

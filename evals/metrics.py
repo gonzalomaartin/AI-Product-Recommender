@@ -18,7 +18,7 @@ field_info = {
     "azucar_g": "numbers",
     "fibra_g": "numbers",
     "proteina_g": "numbers",
-    "sal_g": "numbers",
+    "sal_g": "numbers"
 }
 
 field_metrics = {
@@ -38,11 +38,11 @@ def calculate_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]:
     for result in results: # Iterate over each test case
         for field_name, field_type in field_info.items(): # Iterate over each field 
             for metric_name in field_metrics[field_type]: 
-                metrics_summary[field_name][metric_name] = metrics_summary[field_name].get(metric_name, 0) + result["comparisons"][field_name]
+                metrics_summary[field_name][metric_name] = metrics_summary[field_name].get(metric_name, 0) + result["comparisons"][field_name][metric_name]
  
     for field_name in field_info: 
         for metric_name in metrics_summary[field_name]: 
-            metrics_summary[field_name][metric_name] = round(metrics_summary[field_name][metric_name] / len(results))
+            metrics_summary[field_name][metric_name] = round(metrics_summary[field_name][metric_name] / len(results), 2)
 
     return metrics_summary
         
@@ -89,24 +89,24 @@ def export_csv(results: List[Dict[str, Any]], output_path: Path) -> None:
         print(f"✓ CSV exported to {output_path}")
 
 
-def export_metrics_summary(metrics_summary: dict) -> None:
+def export_summary(metrics_summary: dict, filename: str) -> None:
     """Export metrics summary to jsonl."""
-    print(f"📁 Reports will be saved to: {report_dir}\n")
     BASE_PATH = Path.cwd()
-    report_dir = BASE_PATH / "reports" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    report_dir = BASE_PATH / "evals" / "reports" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
     report_dir.mkdir(parents=True, exist_ok=True)
 
-    with open(report_dir + "/report.jsonl", "w") as f: 
-        f.write(json.dumps(metrics_summary))
+    with open(report_dir / (filename + ".json"), "w", encoding="utf-8") as f: 
+        json.dump(metrics_summary, f, indent=4, ensure_ascii=False)
 
     
 def print_evaluation_summary(results): 
+    print(json.dumps(results, indent=4, ensure_ascii=False))
     for result in results: 
         print(f"Examining product: {result["product_id"]} -> {result["url"]}")
-        passed = sum(1 for comp in result["comparisons"].values() if comp[0] is True)
+        passed = sum(1 for field_dict in result["comparisons"].values() if field_dict["passed"] is True)
         total_fields = len(result["comparisons"])
         
         print(f" ✓ ({passed}/{total_fields})")
-        for comp in result["comparisons"]: 
-            if not comp[0]: 
-                print("\t" + comp[-1])
+        for field_dict in result["comparisons"].values(): 
+            if not field_dict["passed"]: 
+                print("\t" + field_dict["details"])

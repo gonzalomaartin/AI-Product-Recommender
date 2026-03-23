@@ -3,11 +3,11 @@ from dotenv import load_dotenv
 
 load_dotenv() 
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+#GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+#GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-os.environ["GOOGLE_API_KEY"] = GEMINI_API_KEY
-os.environ["GROQ_API_KEY"] = GROQ_API_KEY
+#os.environ["GOOGLE_API_KEY"] = GEMINI_API_KEY
+#os.environ["GROQ_API_KEY"] = GROQ_API_KEY
 
 RELATIVE_PRICE_PROVIDER = "groq"
 ALLERGENS_PROVIDER = "groq"
