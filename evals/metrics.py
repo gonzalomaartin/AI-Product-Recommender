@@ -23,7 +23,7 @@ field_info = {
 
 field_metrics = {
     "exact": ["passed"], 
-    "subjective": ["passed"], 
+    "subjective": ["passed", "difference"], 
     "list": ["passed", "precision", "recall"], 
     "numbers": ["passed", "difference"]
 }

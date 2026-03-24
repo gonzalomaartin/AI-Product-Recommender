@@ -1,4 +1,5 @@
 from pydantic import BaseModel 
+from typing import Literal
 
 class NutritionalInfo(BaseModel): 
     atributos: list[str]
@@ -16,5 +17,5 @@ class Allergens(BaseModel):
     alergenos: list[str]
 
 class RelativePrice(BaseModel): 
-    precio_relativo: str  
+    precio_relativo: Literal["muy barato", "barato", "estandar", "caro", "muy caro"]
     marca: str | None

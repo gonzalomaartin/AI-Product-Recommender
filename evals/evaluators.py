@@ -1,6 +1,14 @@
 """Evaluators for comparing predicted vs ground truth values."""
 import numpy as np 
 
+price_equivalence = {
+    "muy caro": 5, 
+    "caro": 4, 
+    "estandar": 3, 
+    "barato": 2, 
+    "muy barato": 1 
+}
+
 def compare_exact_str(predicted, gold, field_name):
     """Compare exact string match (case-insensitive)."""
     p = str(predicted).strip().lower() if predicted else ""
@@ -16,21 +24,18 @@ def compare_exact_str(predicted, gold, field_name):
 
 def compare_lists(predicted_list, gold_str, field_name):
     """Compare lists using set intersection (precision, recall)."""
-    # Handle predicted list
-    if isinstance(predicted_list, str):
-        pred_set = {a.strip().lower() for a in predicted_list.split(",")}
-    elif isinstance(predicted_list, (list, set)):
-        pred_set = {str(a).strip().lower() for a in predicted_list if a}
-    else:
-        pred_set = set()
+
+    # Auxiliary function to clean the data 
+    def clean_to_set(data):
+        if isinstance(data, str):
+            return {a.strip().lower() for a in data.split(",") if a.strip()}
+        elif isinstance(data, (list, set)):
+            return {str(a).strip().lower() for a in data if a}
+        return set()
     
-    # Handle gold list
-    if isinstance(gold_str, str):
-        gold_set = {a.strip().lower() for a in gold_str.split(",")}
-    elif isinstance(gold_str, (list, set)):
-        gold_set = {str(a).strip().lower() for a in gold_str if a}
-    else:
-        gold_set = set()
+
+    pred_set = clean_to_set(predicted_list)
+    gold_set = clean_to_set(gold_str)
     
     # Calculate metrics
     intersection = gold_set.intersection(pred_set)
@@ -54,14 +59,19 @@ def compare_lists(predicted_list, gold_str, field_name):
 
 def compare_subjective(predicted, gold_options_str, field_name):
     """Compare against multiple valid options."""
-    options = [o.strip().lower() for o in gold_options_str.split("|")]
-    p = str(predicted).strip().lower() if predicted else ""
-    match = p in options
+    options = [option.strip().lower() for option in gold_options_str.split("|")]
+    casted_options = [price_equivalence.get(option, -1) for option in options]
+    p = price_equivalence.get(str(predicted).strip().lower(), -1) if predicted else -1
+    min_diff = 5
+    for option in casted_options: 
+        min_diff = min(min_diff, abs(p - option))
+    match = min_diff == 0
     return {
-        "passed": match, 
+        "passed": match,
+        "difference": min_diff,  
         "truth": gold_options_str, 
         "predicted": predicted, 
-        "details": f"❌ Comparando {field_name}. Opciones válidas: {options}, Obtenido: '{p}'"
+        "details": f"❌ Comparando {field_name}. Opciones válidas: {gold_options_str}, Obtenido: '{predicted}'. Diferencia: {min_diff}"
     }
 
 

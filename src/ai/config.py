@@ -14,7 +14,7 @@ ALLERGENS_PROVIDER = "groq"
 NUTRITIONAL_INFO_PROVIDER = "google_genai"
 
 RELATIVE_PRICE_MODEL = "llama-3.3-70b-versatile"
-ALLERGENS_MODEL = "moonshotai/kimi-k2-instruct-0905"
+ALLERGENS_MODEL = "moonshotai/kimi-k2-instruct"
 NUTRITIONAL_INFO_MODEL = "gemini-3.1-flash-lite-preview"
 
 

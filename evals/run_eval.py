@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 import pandas as pd
 import asyncio
-import sys
+import argparse 
 
 from evals.evaluators import (
     compare_exact_str, compare_lists, compare_subjective, compare_numbers
@@ -38,7 +38,7 @@ def run_evaluations(limit: int = None):
     export_summary(metrics_summary, "metrics")
     export_summary(results, "raw_results")
 
-    print(f"\n✅ Evaluation complete!")
+    print(f"✅ Evaluation complete!")
     
 
 async def run_batch_evaluation(df: pd.DataFrame):
@@ -92,6 +92,13 @@ async def run_single_evaluation(product_url: str, ground_truth: dict, current: i
 
 
 if __name__ == "__main__":
-    # Run with optional limit
-    limit = int(sys.argv[1]) if len(sys.argv) > 1 else None
-    run_evaluations(limit=limit)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--limit', 
+        type=int, 
+        default=None, 
+        help="Define the number of test cases to execute"
+    )
+    
+    args = parser.parse_args()
+    run_evaluations(limit=args.limit)

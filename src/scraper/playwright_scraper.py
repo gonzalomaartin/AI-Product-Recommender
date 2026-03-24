@@ -6,12 +6,13 @@ from dotenv import load_dotenv
 import shutil 
 import json 
 
-from src.ai.orchestrator import orchestrate_AI_pipeline
+from src.ai.orchestrator import AIOrchestrator
 from src.database.db_operations import upload_product_relational_db, check_item_id, init_db, upload_product_vector_db, compute_embedding
 from src.scraper.utils import BASE_IMG_DIR, WAIT_TIME, POSTAL_CODE, DF_PATH, accept_cookies, fill_input, submit_form, download_image, load_dataframe, resize_image_url
 
 load_dotenv()  # loads the .env file
-    
+
+processor = AIOrchestrator()
 
 async def get_categories(page: Page):
     """Navigate to categories and scrape all products by category."""
@@ -217,7 +218,7 @@ async def get_items(page: Page, subcategory: str):
                 continue
             
             # Getting transformed and clean information
-            llm_info = await orchestrate_AI_pipeline(
+            llm_info = await processor.orchestrate_AI_pipeline(
                 relative_price=True, 
                 nutritional_info=True, 
                 allergens=True, 
@@ -232,7 +233,7 @@ async def get_items(page: Page, subcategory: str):
             print(f"📁 Directory {item_info["folder_imgs"]} deleted successfully")
             del item_info["folder_imgs"]
 
-            for k, v in llm_info(): 
+            for k, v in llm_info.items(): 
                 if isinstance(v, list):
                     llm_info[k] = ", ".join(v) if v else "ninguno"
 
