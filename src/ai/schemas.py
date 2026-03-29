@@ -1,4 +1,4 @@
-from pydantic import BaseModel 
+from pydantic import BaseModel, Field
 from typing import Literal
 
 class NutritionalInfo(BaseModel): 
@@ -18,4 +18,7 @@ class Allergens(BaseModel):
 
 class RelativePrice(BaseModel): 
     precio_relativo: Literal["muy barato", "barato", "estandar", "caro", "muy caro"]
-    marca: str | None
+    marca: str | None = Field(
+        default=None,
+        description="Marca del producto. Si no se puede identificar, devolver null (valor JSON)."
+    )

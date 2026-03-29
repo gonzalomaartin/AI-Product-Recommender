@@ -22,7 +22,7 @@ field_info = {
 }
 
 field_metrics = {
-    "exact": ["passed"], 
+    "exact": ["passed", "invalid"], 
     "subjective": ["passed", "difference"], 
     "list": ["passed", "precision", "recall"], 
     "numbers": ["passed", "difference"]
@@ -32,6 +32,7 @@ field_metrics = {
 def calculate_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Calculate metrics from evaluation results."""
     metrics_summary = dict()
+
     for i, k in enumerate(field_info): 
         metrics_summary[k] = dict()
             
@@ -42,7 +43,9 @@ def calculate_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]:
  
     for field_name in field_info: 
         for metric_name in metrics_summary[field_name]: 
-            metrics_summary[field_name][metric_name] = round(metrics_summary[field_name][metric_name] / len(results), 2)
+            empty_values = metrics_summary[field_name]["invalid"] if field_info[field_name] == "exact" and metric_name == "passed" else 0
+            # Right now empty values can only occur when we're comparing exact strings
+            metrics_summary[field_name][metric_name] = round(metrics_summary[field_name][metric_name] / (len(results) - empty_values), 2)
 
     return metrics_summary
         

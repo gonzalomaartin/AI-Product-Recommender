@@ -45,15 +45,21 @@ class AIOrchestrator:
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=1, min=2, max=60),
         retry=retry_if_exception_type(Exception),
-        before_sleep=lambda retry_state: print(f"🔁 Retrying task... attempt {retry_state.attempt_number}")
+        before_sleep=lambda retry_state: print(f"🔁 Retrying task: {retry_state.kwargs.get("task_name")}. Attempt {retry_state.attempt_number}. Error: \n{retry_state.outcome.exception()}")
     )
-    async def _safe_invoke(self, chain, inputs):
+    async def _safe_invoke(self, chain, inputs, task_name):
         return await chain.ainvoke(inputs)
     
     async def extract_relative_price(self, title: str, price_description: str) -> RelativePrice:
         print("➡️ Extracting relative price")
-        return await self._safe_invoke(self.price_chain, {"title": title, "price_description": price_description})
+        return await self._safe_invoke(self.price_chain, {"title": title, "price_description": price_description}, "relative_price")
     
+    @retry(
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=1, min=2, max=60),
+        retry=retry_if_exception_type(Exception),
+        before_sleep=lambda retry_state: print(f"🔁 Retrying task: nutritional_info. Attempt {retry_state.attempt_number}. Error: \n{retry_state.outcome.exception()}")
+    )
     async def extract_nutritional_info(self, image_urls: List[str]) -> NutritionalInfo:
         print("➡️ Extracting the nutritional information")
         urls = image_urls[:5] if image_urls else []
@@ -70,14 +76,14 @@ class AIOrchestrator:
         
         chain = ChatPromptTemplate.from_messages(messages) | self.nutri_llm
         return await chain.ainvoke({})
-    
+        
     async def extract_allergens(self, product_description: str) -> Allergens:
         print("➡️ Extracting the allergens")
         inputs = {
             "product_description": product_description,
             "format_instructions": self.aller_parser.get_format_instructions()
         }
-        return await self._safe_invoke(self.aller_chain, inputs)
+        return await self._safe_invoke(self.aller_chain, inputs, "allergens")
 
 
     async def orchestrate_AI_pipeline(self, relative_price: bool, nutritional_info: bool, allergens: bool, product_ID: str,  **kwargs) -> dict: 

@@ -3,6 +3,7 @@ import asyncio
 from src.ai.orchestrator import AIOrchestrator
 from tests.test_scraper import run_single_scrape
 import re
+import shutil 
 
 TEST_URL = "https://tienda.mercadona.es/product/22966/cereales-copos-maiz-corn-flakes-hacendado-0-azucares-anadidos-caja"
 
@@ -22,6 +23,10 @@ async def test_ai(url, product_ID = None):
         image_urls=item_info["image_urls"], 
         product_description=item_info["descripcion"]
     )
+
+    shutil.rmtree(item_info["folder_imgs"], ignore_errors=True)
+    print(f"📁 Directory {item_info["folder_imgs"]} deleted successfully")
+    
     print(json.dumps(llm_info, indent=4, ensure_ascii=False)) 
     return llm_info
 

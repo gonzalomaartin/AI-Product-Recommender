@@ -24,6 +24,8 @@ def run_evaluations(limit: int = None):
     df = pd.read_csv(DF_PATH, sep=";", decimal=",", na_values="-", keep_default_na=False)
     if limit:
         df = df.head(limit)
+
+    df = df.astype(object).where(df.notna(), None) # Converting all NaN values (by default they get converted to nan (float)) to None
     
     print(f"\n📊 Starting evaluation of {len(df)} products...")
     

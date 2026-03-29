@@ -1,0 +1,56 @@
+{
+    "marca": {
+        "passed": 0.95,
+        "invalid": 0.12
+    },
+    "precio_relativo": {
+        "passed": 0.42,
+        "difference": 0.75
+    },
+    "alergenos": {
+        "passed": 0.88,
+        "precision": 0.98,
+        "recall": 0.95
+    },
+    "atributos": {
+        "passed": 0.75,
+        "precision": 0.85,
+        "recall": 0.95
+    },
+    "energia_kj": {
+        "passed": 1.0,
+        "difference": 0.04
+    },
+    "energia_kcal": {
+        "passed": 1.0,
+        "difference": 0.0
+    },
+    "grasas_g": {
+        "passed": 1.0,
+        "difference": 0.0
+    },
+    "grasas_saturadas_g": {
+        "passed": 1.0,
+        "difference": 0.0
+    },
+    "carbohidratos_g": {
+        "passed": 1.0,
+        "difference": 0.0
+    },
+    "azucar_g": {
+        "passed": 0.92,
+        "difference": 0.27
+    },
+    "fibra_g": {
+        "passed": 0.96,
+        "difference": 0.0
+    },
+    "proteina_g": {
+        "passed": 1.0,
+        "difference": 0.0
+    },
+    "sal_g": {
+        "passed": 1.0,
+        "difference": 0.0
+    }
+}

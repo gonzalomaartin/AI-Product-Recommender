@@ -1,25 +1,25 @@
 ﻿ID_producto;marca;precio_relativo;alergenos;atributos;energia_kj;energia_kcal;grasas_g;grasas_saturadas_g;carbohidratos_g;azucar_g;fibra_g;proteina_g;sal_g
-22966;Hacendado;barato;cereal, gluten, lactosa, frutos de cascara, soja;sin azucar anadido;1583;373;1,1;0,4;82;0,9;4,4;6,7;1
-9210;Kellogg's;caro;cereal, gluten;;1604;378;0,9;0,2;84;8;3;7;1,1
+22966;Hacendado;barato;gluten, lactosa, frutos de cascara, soja;sin azucar anadido;1583;373;1,1;0,4;82;0,9;4,4;6,7;1
+9210;Kellogg's;caro;gluten;;1604;378;0,9;0,2;84;8;3;7;1,1
 4241;Hacendado;caro|muy caro;;;3378;822;91,4;12,8;0;0;-;0;0
 21756;Campo Nature;muy caro;;ecologico;1502;365;37,2;6,5;8,9;0,5;4;1,6;4
-19958;Antonio;caro|muy caro;mostaza, sesamo;fuente de fibra;79;19;0,4;0,1;0,8;0,6;4,2;1;1,2
+19958;Antonio;caro|muy caro;mostaza, sesamo, sulfitos;fuente de fibra;79;19;0,4;0,1;0,8;0,6;4,2;1;1,2
 19867;Enervit;muy caro;lactosa, soja, frutos de cascara, sesamo, cacahuete;alto en proteina, bajo en azucar;1612;386;17;9;38;1,9;-;33;0,2
-14213;Hacendado;estandar;cereal, gluten, lactosa, soja, mostaza;fuente de fibra;1996;477;21;2,3;61;18;6,8;7,5;1,1
-14212;Hacendado;barato;cereal, gluten, lactosa, mostaza, frutos de cascara, huevo, soja;;2068;494;24;14;62;33;4;5,5;0,53
+14213;Hacendado;estandar; gluten, lactosa, soja, mostaza;fuente de fibra;1996;477;21;2,3;61;18;6,8;7,5;1,1
+14212;Hacendado;barato;gluten, lactosa, mostaza, frutos de cascara, huevo, soja;;2068;494;24;14;62;33;4;5,5;0,53
 14269;La Carloteña;muy caro;soja, frutos de cascara, huevo;alto en proteina;512;122;6;0,6;0,5;0,5;-;17;1,7
 52336;Hacendado;caro|muy caro;lactosa, pescado;;1155;280;26,8;3,4;1,7;1,7;-;7,9;2
 16812;Hacendado;caro|muy caro;pescado;;1371;331;28;4,1;0,7;0,5;-;19;0,78
 24477;Hacendado;estandar|caro;marisco, moluscos, pescado, sulfitos;;326;77;0,9;0,1;0;0;-;17,2;0,35
-84629;Hacendado;barato;cereal, gluten, lactosa, sesamo, frutos de cascara, soja, sulfitos, moluscos, pescado, mostaza, cacahuete;;2097;503;31;21;48;7,3;-;7,9;0,88
-14431;Hacendado;estandar ;gluten, lactosa, soja, sesamo, mostaza;;1121;265;3,5;1,4;48;6;3,5;8,4;1,2
+84629;-;barato; gluten, lactosa, sesamo, frutos de cascara, soja, sulfitos, moluscos, pescado, mostaza, cacahuete;;2097;503;31;21;48;7,3;-;7,9;0,88
+14431;-;estandar ;gluten, lactosa, soja, sesamo, mostaza;;1121;265;3,5;1,4;48;6;3,5;8,4;1,2
 21318;Hacendado;barato;lactosa;bajo en azucar, bajo en grasa;204;48;0,1;0;7,7;5,5;0,3;3,9;0,18
 21073;Hacendado;barato;lactosa;bajo en grasa, alto en proteina;226;53;0,5;0,1;5;4,6;-;8,3;0,1
 5044;Hacendado;muy barato;;;1462;344;1;0,2;75;0,5;-;8,2;0,01
-13926;Luengo;caro|muy caro;soja;fuente de fibra, vegetariano, bajo en grasa, alto en proteina;1517;361;8,8;1,5;13;6,3;15;50;0
+13926;Luengo;caro|muy caro;soja;fuente de fibra, vegetariano, bajo en grasa, alto en proteina, vegano;1517;361;8,8;1,5;13;6,3;15;50;0
 26019;Hacendado;barato|muy barato;sulfitos;;350;83;0,4;0,1;10,7;0,8;-;5,8;0,8
 13204;Nesquik;estandar|barato;soja;;1634;386;3,6;1,6;78,9;75,1;7,7;5,1;0,41
-52672;Hacendado;estandar;sulfitos, cereal;;905;216;16;5,5;3,5;1,9;-;15;1,4
+52672;-;estandar;sulfitos;;905;216;16;5,5;3,5;1,9;-;15;1,4
 12562;Nestlé;estandar;lactosa, frutos de cascara;;2248;538;30,3;17,4;58,9;57,7;2;6,3;0,13
 17163;Hacendado;caro|muy caro;;;833;201;15;2,1;14,3;12,5;-;1,6;0,9
 10502;Asturiana;estandar;lactosa;;194;46;1,6;1,1;4,7;4,2;-;3,2;0,1
