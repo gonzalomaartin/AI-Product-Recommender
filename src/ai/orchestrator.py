@@ -39,6 +39,12 @@ class AIOrchestrator:
                 ("human", "Descripcion del producto: {product_description} \n {format_instructions}")
             ]) | aller_llm | self.aller_parser
         )
+        self.aller_reflection_chain = (
+            ChatPromptTemplate.from_messages([
+                SystemMessage(content=prompts[3]),
+                ("human", "Descripcion del producto: {product_description} \n {format_instructions}")
+            ]) | aller_llm | self.aller_parser
+        )   
 
     # 3. Declarative Retries
     @retry(
@@ -79,11 +85,22 @@ class AIOrchestrator:
         
     async def extract_allergens(self, product_description: str) -> Allergens:
         print("➡️ Extracting the allergens")
-        inputs = {
+        
+        # 1st Extraction 
+        initial_inputs = {
             "product_description": product_description,
             "format_instructions": self.aller_parser.get_format_instructions()
         }
-        return await self._safe_invoke(self.aller_chain, inputs, "allergens")
+        initial_result = await self._safe_invoke(self.aller_chain, initial_inputs, "initial allergens")
+        initial_result = initial_result.model_dump() 
+
+        # Applying reflection to the initial answer
+        reflection_inputs = {
+            "product_description": product_description, 
+            "format_instructions": self.aller_parser.get_format_instructions(), 
+            
+        }
+        return await self._safe_invoke(self.aller_reflection_chain, reflection_inputs, "reflection allergens")
 
 
     async def orchestrate_AI_pipeline(self, relative_price: bool, nutritional_info: bool, allergens: bool, product_ID: str,  **kwargs) -> dict: 

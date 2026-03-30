@@ -1,5 +1,8 @@
-from .db_utils import Base, engine, SessionLocal, Product, collection
 from sentence_transformers import SentenceTransformer
+from sqlalchemy.exc import SQLAlchemyError
+
+from src.database.db_utils import engine, SessionLocal, collection
+from src.database.models import Base, Product, ProductAllergen
 
 
 print("🔄 db_operations.py is being executed...")
@@ -25,20 +28,22 @@ async def init_db_async():
         print(f"Failed to initialize the database: {e}")
 
 
-def upload_product_relational_db(item_info: dict):
-    db = SessionLocal()
-    try:
-        new_product = Product(**item_info)
-        db.add(new_product)
-        db.commit()          # ← normal sync commit, no await!
-        db.refresh(new_product)
-        print(f"✅ Successfully uploaded product {item_info['ID_producto']} to PostgreSQL")
-    except Exception as e:
-        db.rollback()
-        print(f"Error uploading product: {e}")
-        raise
-    finally:
-        db.close()
+def upload_product_relational_db(item_info: dict, allergens_info: list[dict]):
+    with SessionLocal() as db: 
+        try:
+            new_product = Product(**item_info)
+            # Using the relationship defined in the table to create the samples and fill the ID at the same time without having to flush
+            new_product.alergenos = [
+                ProductAllergen(**a) for a in allergens_info
+            ]
+            db.add(new_product)
+
+            db.commit()          # ← normal sync commit, no await!
+            print(f"✅ Successfully uploaded product {item_info['ID_producto']} to PostgreSQL")
+        except SQLAlchemyError as e:
+            db.rollback()
+            print(f"Error uploading product {item_info["ID_producto"]}: {e}")
+            raise
 
 async def upload_product_relation_db_async(item_info: dict): 
     async with SessionLocal() as session: #try sync instead of async

@@ -8,7 +8,7 @@ import json
 
 from src.ai.orchestrator import AIOrchestrator
 from src.database.db_operations import upload_product_relational_db, check_item_id, init_db, upload_product_vector_db, compute_embedding
-from src.scraper.utils import BASE_IMG_DIR, WAIT_TIME, POSTAL_CODE, DF_PATH, accept_cookies, fill_input, submit_form, download_image, load_dataframe, resize_image_url
+from src.scraper.utils import BASE_IMG_DIR, WAIT_TIME, POSTAL_CODE, accept_cookies, fill_input, submit_form, download_image, resize_image_url
 
 load_dotenv()  # loads the .env file
 
@@ -16,7 +16,6 @@ processor = AIOrchestrator()
 
 async def get_categories(page: Page):
     """Navigate to categories and scrape all products by category."""
-    global df  
     
     try:
         # Navigate to categories section
@@ -51,14 +50,7 @@ async def get_categories(page: Page):
             continue
         
         try:
-            list_items = await get_items(page, category) 
-            if list_items:
-                if df is None: 
-                    df = pd.DataFrame(list_items)
-                else: 
-                    df_aux = pd.DataFrame(list_items)
-                    df = pd.concat([df, df_aux], ignore_index=True)
-                print(f"✅ Batch of {len(list_items)} items saved into the DataFrame")
+            await get_items(page, category) 
         except Exception as e:
             print(f"❌ Error processing items for category '{category}': {e}")
             raise
@@ -228,14 +220,17 @@ async def get_items(page: Page, subcategory: str):
                 image_urls=item_info["image_urls"], 
                 product_description=item_info["descripcion"]
             )
+            allergens_info = llm_info["alergenos"]
+            del llm_info["alergenos"]
 
             shutil.rmtree(item_info["folder_imgs"], ignore_errors=True)
             print(f"📁 Directory {item_info["folder_imgs"]} deleted successfully")
             del item_info["folder_imgs"]
+            del item_info["image_urls"]
 
             for k, v in llm_info.items(): 
-                if isinstance(v, list):
-                    llm_info[k] = ", ".join(v) if v else "ninguno"
+                if isinstance(v, list) and (not v or isinstance(v[0], str)):
+                    llm_info[k] = ", ".join(v) if v else ""
 
             # === PREPARING EMBEDDING TEXT ===
             item_embedding_text = {
@@ -247,11 +242,12 @@ async def get_items(page: Page, subcategory: str):
                 "Origen": item_info["origen"]
             }
 
-            del item_info["image_urls"]
             item_info.update(llm_info)
             print(json.dumps(item_info, indent=4, ensure_ascii=False)) # Prety printing the dictionary with all the information (one line for each key, value)
 
             item_embedding_text.update(llm_info)
+            item_embedding["alergenos"] = ", ".join([x["nombre"] for x in allergens_info])
+
             lines = []
             for k, v in item_embedding_text.items():
                 if k == "precio_relativo": 
@@ -264,16 +260,12 @@ async def get_items(page: Page, subcategory: str):
             item_embedding = compute_embedding(embedding_text)
 
             # === UPLOADING TO VECTOR & RELATIONAL DB ===
-            upload_product_relational_db(item_info)
-
-            list_items.append(item_info)
+            upload_product_relational_db(item_info, allergens_info)
 
             upload_product_vector_db(item_info["ID_producto"], item_embedding)
             
             await page.locator("[data-testid='modal-close-button']").click() 
             await asyncio.sleep(WAIT_TIME)
-
-    return list_items
     
 
 async def run_single(url_start: str, postal_code: str = POSTAL_CODE):
@@ -307,7 +299,6 @@ if __name__ == "__main__":
     except Exception as e:
         exit(1)
     
-    df = load_dataframe() 
     # Debugging run_single execution
     print("🔄 Starting the scraping process...")
     try:
@@ -317,5 +308,3 @@ if __name__ == "__main__":
         print(f"❌ Scraping process failed: {e}")
         exit(1)
 
-    df.to_csv(DF_PATH)
-    print("✅ DataFrame saved to 'databases/df_products.csv'")

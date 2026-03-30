@@ -28,98 +28,84 @@
 
 ### System Components
 
-#### 1. **Web Scraping Layer** (`scraping/`)
+#### 1. **Web Scraping Layer** (`src/scraper/`)
 - **Tool**: Playwright (async for concurrency)
 - **Responsibility**: Extract product data from Mercadona's website
 - **Files**:
-  - `scraper_fast_cloud.py`: Main scraping orchestrator
-  - `scraper.py`: Alternative scraping implementation
-  - `utils.py`: Utility functions for scraping tasks
-  - `images/`: Stores downloaded product images
+  - `playwright_scraper.py`: Main scraping orchestrator using Playwright async API
+  - `utils.py`: Utility functions for scraping tasks (download_image, resize_image_url, etc.)
 
-- **Concurrency Management**:
-  - `PROD_CONCURRENCY = 1`: Serial product scraping to avoid overwhelming the server
-  - `LLM_VLM_CONCURRENCY = 1`: Serial AI model calls for cost efficiency
-  - `asyncio.Semaphore`: Controls concurrent requests
+- **Key Functions**:
+  - `get_categories()`: Navigate and extract all product categories
+  - `get_items()`: Iterate through items in a category
+  - `get_item_info()`: Extract detailed product information from product detail page
+  - `download_image()`: Async image download using aiohttp
 
 - **Data Extracted**:
   - Product ID, Title, Category, Subcategory
   - Description, Price, Weight, Unit
   - Ingredients, Origin, Product Link
-  - Product Images (up to 5 per product)
+  - Product Images (up to 5 per product, resized to 900px)
 
-#### 2. **AI Integration Layer** (`scraping/`)
-- **LLM Tasks** (`llm_tasks_groq.py`):
-  - API: Groq (Open-source models via Groq API)
-  - Model: `llama-3.3-70b-versatile`
-  - Tasks:
-    - Extract brand and allergens from product descriptions
-    - Classify relative price (económico, estándar, premium, caro)
-    - Generate embeddings for semantic search
-  - Response Format: JSON schema with strict validation
-  - Retry Logic: Exponential backoff for rate limiting
+#### 2. **AI Integration Layer** (`src/ai/`)
+- **Architecture**: Class-based `AIOrchestrator` for managing AI pipelines
+- **Configuration** (`config.py`):
+  - `RELATIVE_PRICE_PROVIDER = "groq"` with model `llama-3.3-70b-versatile`
+  - `ALLERGENS_PROVIDER = "groq"` with model `moonshotai/kimi-k2-instruct`
+  - `NUTRITIONAL_INFO_PROVIDER = "google_genai"` with model `gemini-3.1-flash-lite-preview`
 
-- **VLM Tasks** (`llm_tasks_groq.py`):
-  - API: Groq (Open-source models via Groq API)
-  - Model: Vision-capable model (handles up to 5 images per request)
-  - Tasks:
-    - Extract nutritional information from product images
-    - Identify product attributes and claims
-  - Input: Base64-encoded product images
-  - Response Format: JSON schema with nutritional fields
+- **Schemas** (`schemas.py`):
+  - `RelativePrice`: Pydantic model for price classification (very barato to muy caro)
+  - `NutritionalInfo`: Pydantic model for nutritional data extraction
+  - `Allergens`: Pydantic model for allergen identification
 
-- **Other AI Implementations**:
-  - `llm_tasks_gemini.py`: Google Gemini API integration (alternative)
-  - `nutritional_info_vlm.py`: Ollama-based VLM for nutritional data
-  - `product_info_llm.py`: LLM-based product information extraction
+- **Orchestration** (`orchestrator.py`):
+  - `AIOrchestrator` class: Pre-builds chains for each task in `__init__`
+  - `extract_relative_price()`: LLM-based price classification
+  - `extract_nutritional_info()`: VLM-based extraction from product images (dynamic message building)
+  - `extract_allergens()`: LLM-based allergen extraction using Pydantic parser
+  - `orchestrate_AI_pipeline()`: Runs all enabled AI tasks concurrently via `asyncio.gather()`
 
-#### 3. **Database Layer** (`databases/`)
+- **Features**:
+  - Retry logic: `@retry` decorator with exponential backoff (5 attempts, 2-60s delay)
+  - Structured output: Uses LangChain's `with_structured_output()` for type-safe responses
+  - Dynamic image handling: Builds HumanMessage content with up to 5 images per request
+  - Error handling: `return_exceptions=True` to catch and log failures without stopping pipeline
+
+#### 3. **Database Layer** (`src/database/`)
 
 ##### Relational Database (PostgreSQL/SQLite)
 - **ORM**: SQLAlchemy
 - **File**: `db_utils.py`
-- **Schema**: `Product` model
-- **Fields**:
-  ```python
-  ID_producto (String, PK)
-  categoria, subcategoria (String)
-  titulo, descripcion (String)
-  marca, origen (String)
-  precio, peso, precio_por_unidad (Float)
-  unidad (String)
-  precio_relativo (String)  # "economico", "estandar", "caro"
-  alergenos, atributos (JSON)
-  energia_kj, energia_kcal (Integer)
-  grasas_g, grasas_saturadas_g, carbohidratos_g, azucar_g, fibra_g, proteina_g, sal_g (Float)
-  link_producto (String, UNIQUE)
-  tiempo_computo (Float)
-  ```
-- **Purpose**: Fast lookups by filters (category, price range, allergens)
-- **Session Management**: Synchronous operations with connection pooling
+- **Schema**: `Product` model with 30+ fields
+- **Key Fields**:
+  - Primary key: `ID_producto` (String)
+  - Metadata: `categoria`, `subcategoria`, `titulo`, `descripcion`, `marca`, `origen`
+  - Pricing: `precio`, `peso`, `precio_por_unidad`, `unidad`, `precio_relativo`
+  - Nutritional: `energia_kj`, `energia_kcal`, `grasas_g`, `carbohidratos_g`, `azucar_g`, `fibra_g`, `proteina_g`, `sal_g`
+  - AI-extracted: `alergenos` (JSON), `atributos` (JSON)
+  - Metadata: `link_producto` (unique), `tiempo_computo` (float)
+- **Purpose**: Fast indexed lookups by category, price, allergens
+- **Session Management**: Synchronous operations with connection pooling (10 pool size, 20 max overflow)
 
 ##### Vector Database (Chroma)
 - **Purpose**: Store embeddings for semantic search
 - **Implementation**: `chromadb.PersistentClient`
-- **Location**: `databases/chroma_db/`
+- **Location**: `data/chroma_db/`
+- **Model**: BAAI/bge-m3 (SentenceTransformer) for embeddings
 - **Data Stored**:
   - Product ID
-  - Embeddings (768-dimensional vectors from embeddings models)
-  - Metadata (product title, brand, category)
+  - Embeddings (768-dimensional vectors)
+  - Metadata
 
-##### Data Utilities
-- `db_operations.py`:
-  - `init_db()`: Initialize database schema
-  - `upload_product_relational_db()`: Insert product into PostgreSQL
-  - `upload_product_vector_db()`: Insert embedding into Chroma
-  - `check_item_id()`: Check if product already exists
-  - `compute_embedding()`: Generate embeddings using Ollama
+##### Database Operations (`db_operations.py`):
+- `init_db()`: Initialize database schema synchronously
+- `upload_product_relational_db()`: Insert product into relational DB
+- `upload_product_vector_db()`: Insert embedding into Chroma
+- `check_item_id()`: Check if product already exists
+- `compute_embedding()`: Generate embeddings using SentenceTransformer
 
-#### 4. **Utilities & Helpers** (`scraping/`)
-- `utils.py`: Generic utility functions
-- `prompts/`:
-  - `BRAND_ALLERGIES_prod.txt`: Prompt for LLM brand/allergen extraction
-  - `VLM.txt`: Prompt for VLM nutritional data extraction
-  - Rules for price classification based on Spanish market standards
+#### 4. **Utilities & Helpers** (`src/scraper/utils.py`)
 
 #### 5. **Data Utilities** (`databases/`)
 - `clear_vector.py`: Script to clear Chroma vector database
@@ -135,36 +121,41 @@
 Website (Mercadona) 
     ↓ [Playwright async scraping]
 Product Data (title, description, price, images)
-    ↓ [Organize in dictionaries]
-Local product information objects
+    ↓ [get_item_info() extracts product details]
+Product Information Object
+    ↓ [AIOrchestrator processes]
+Enriched product data with AI insights
 ```
 
-### 2. **AI Enrichment Pipeline**
+### 2. **AI Enrichment Pipeline** (via `AIOrchestrator`)
 ```
 Product Data
-    ├─→ [LLM Task] Extract brand & allergens → JSON response
-    ├─→ [VLM Task] Parse images → Nutritional info (JSON)
-    └─→ [LLM] Generate embedding → Vector representation
+    ├─→ [extract_relative_price()] LLM classifies price → RelativePrice schema
+    ├─→ [extract_nutritional_info()] VLM parses images → NutritionalInfo schema
+    └─→ [extract_allergens()] LLM identifies allergens → Allergens schema
+         ↓ [asyncio.gather combines all results]
+Unified enriched product dictionary
 ```
 
 ### 3. **Database Storage**
 ```
 Enriched Product Data
-    ├─→ [Relational DB] Insert structured data into PostgreSQL
-    └─→ [Vector DB] Insert embeddings into Chroma
+    ├─→ [upload_product_relational_db()] → PostgreSQL/SQLite
+    ├─→ [compute_embedding()] → BAAI/bge-m3 embedding
+    └─→ [upload_product_vector_db()] → Chroma
 ```
 
 ### 4. **Semantic Search Workflow**
 ```
 User Query ("I want a healthier alternative to Nutella")
-    ↓ [LLM Embedding]
+    ↓ [compute_embedding()] Generate embedding
 Vector representation of query
-    ↓ [Chroma Semantic Search]
-Top-K similar products (embeddings)
-    ↓ [Product ID Lookup]
+    ↓ [Chroma semantic search]
+Top-K similar products
+    ↓ [Product ID lookup]
 Detailed product info from PostgreSQL
-    ↓ [LLM Ranking]
-Ranked recommendations with reasoning
+    ↓ [Optional: Re-rank with LLM]
+Ranked recommendations
 ```
 
 ---
@@ -173,22 +164,25 @@ Ranked recommendations with reasoning
 
 ### Core Technologies
 - **Python 3.9+**: Language
-- **Playwright**: Browser automation for web scraping
+- **Playwright**: Async browser automation for web scraping
+- **LangChain**: LLM orchestration and chain management
 - **SQLAlchemy**: ORM for relational database
 - **PostgreSQL/SQLite**: Relational database
-- **Chroma**: Vector database
+- **Chroma**: Vector database with persistent storage
 - **Groq API**: LLM and VLM inference (primary)
-- **Google Gemini API**: Alternative LLM provider
-- **Ollama**: Local embeddings and VLM generation
+- **Google Gemini API**: VLM for nutritional information
+- **Tenacity**: Retry logic with exponential backoff
 - **Pydantic**: Data validation and schema definition
 - **asyncio**: Asynchronous programming
 - **aiohttp, aiofiles**: Async HTTP and file I/O
+- **SentenceTransformer**: Embeddings generation (BAAI/bge-m3)
 
 ### Key Libraries
 - `dotenv`: Environment variable management
-- `pandas`: Data manipulation
-- `aiohttp`: Async HTTP client
+- `pandas`: Data manipulation (evaluation scripts)
+- `aiohttp`: Async HTTP client for image downloads
 - `chromadb`: Vector database client
+- `tenacity`: Retry decorator with exponential backoff
 
 ### Environment Variables (`.env`)
 ```
@@ -205,60 +199,79 @@ COLLECTION_NAME=products_embeddings
 ## 📊 Current State of the Project
 
 ### ✅ Completed Features
-1. **Web Scraping**: Functional scraper for Mercadona products with async concurrency
-2. **LLM Integration**: Brand extraction, allergen identification, price classification
-3. **VLM Integration**: Nutritional information extraction from product images
-4. **Dual Database**: PostgreSQL for structured data, Chroma for semantic search
-5. **Data Validation**: Pydantic models for response validation
-6. **Error Handling**: Exponential backoff, retry logic for rate limiting
-7. **Utility Scripts**: Database clearing and maintenance tools
-8. **JSON Schema Enforcement**: Groq API response format validation
+1. **Web Scraping**: Functional async Playwright scraper for Mercadona products
+2. **AI Orchestration**: Class-based `AIOrchestrator` for managing multiple AI tasks
+3. **LLM Integration**: 
+   - Price classification (Groq's llama-3.3-70b)
+   - Allergen extraction (Groq's kimi-k2-instruct)
+   - Structured output with Pydantic validation
+4. **VLM Integration**: 
+   - Nutritional information extraction from product images (Google Gemini)
+   - Dynamic image handling with up to 5 images per request
+5. **Dual Database**: PostgreSQL/SQLite for structured data, Chroma for semantic search
+6. **Error Handling**: Exponential backoff retry logic with Tenacity decorator
+7. **Evaluation Framework**: Automated evaluation system with metrics calculation
+8. **Testing Suite**: test_ai.py, test_scraper.py for validation
 
-### 🔄 In Progress / Recent Changes
-1. **Pydantic Model Validation**: Added `VLMResponse` and `LLMResponse` models
-2. **Response Format Validation**: Strict JSON schema for Groq API responses
-3. **Exponential Backoff**: Implemented for handling rate limits
-4. **Image Upload to VLM**: Support for multi-image processing (max 5 images)
-5. **Nutritional Data Extraction**: VLM tasks for parsing nutritional info from images
+### 🔄 Recent Changes (March 2026)
+1. **Refactored AI Pipeline**: Moved from functional to class-based `AIOrchestrator` design
+2. **LangChain Integration**: Replaced custom API calls with LangChain's standardized interface
+3. **Dynamic Image Handling**: Fixed image passing by building HumanMessage content dynamically
+4. **Retry Decorator**: Added `@retry` decorator with exponential backoff (5 attempts, 2-60s delay)
+5. **Provider Configuration**: Separated model providers (Groq, Google, Moonshot)
+6. **Error Handling**: Improved error logging with task names and exception details
 
 ### 🚀 Working Features
-- Product scraping from Mercadona
-- LLM-based data enrichment
-- VLM-based image analysis
-- Database storage and retrieval
-- Semantic search via embeddings
-- Error handling and retries
+- ✅ Product scraping from Mercadona with Playwright
+- ✅ LLM-based price classification and allergen extraction
+- ✅ VLM-based nutritional information extraction from images
+- ✅ Async database operations with SQLAlchemy
+- ✅ Vector embeddings with SentenceTransformer
+- ✅ Semantic search via Chroma
+- ✅ Comprehensive error handling and retry logic
+- ✅ Evaluation and metrics calculation
 
 ### ⚠️ Known Issues / Limitations
-1. **Rate Limiting**: Groq API has rate limits; exponential backoff implemented
-2. **Image Processing**: Max 5 images per request (Groq limit)
-3. **Concurrency**: Set to 1 for safety; can be increased if needed
-4. **Column Name Mismatches**: Some model responses use different field names than database schema
-5. **Database Migrations**: No automated migration system in place
+1. **Image Content Passing**: Images must be deserialized (unpacked with `*`) for proper VLM processing
+2. **Rate Limiting**: Groq and Google APIs have rate limits; exponential backoff handles this
+3. **Image Count**: Maximum 5 images per VLM request (API limitation)
+4. **Async/Sync Mixing**: Database operations are synchronous; async wrappers available but unused
+5. **Error Recovery**: Failed tasks logged but orchestration continues with partial results
 
 ### 📈 Performance Metrics
-- **Scraping Speed**: ~1 product per second (with LLM/VLM enrichment)
+- **Scraping Speed**: ~1 product per second (with AI enrichment)
 - **LLM Response Time**: ~0.5-2 seconds per request
-- **VLM Response Time**: ~1-5 seconds per request
+- **VLM Response Time**: ~2-5 seconds per request
+- **Embedding Generation**: ~10-50ms per product
 - **Database Queries**: Sub-millisecond for indexed lookups
 
 ---
 
 ## 🧪 Testing & Validation
 
+### Evaluation Framework
+- **Location**: `evals/` directory
+- **Components**:
+  - `run_eval.py`: Main evaluation runner with batch processing
+  - `evaluators.py`: Comparison functions for different data types
+  - `metrics.py`: Metrics calculation and export (CSV, JSON)
+  - `schemas.py`: Schema definitions for ground truth data
+
+### Evaluation Metrics
+- **Exact Match**: For brand and string fields
+- **Precision/Recall**: For list-based fields (allergens, attributes)
+- **Subjective Scoring**: For price classification with equivalence mapping
+- **Numeric Tolerance**: For nutritional values with relative error thresholds
+
+### Test Files
+- `tests/test_ai.py`: Tests `AIOrchestrator` with real product URLs
+- `tests/test_scraper.py`: Tests `run_single_scrape()` for scraping validation
+- `evals/run_eval.py`: Comprehensive evaluation against ground truth
+
 ### Data Validation
 - Pydantic models validate LLM and VLM responses
-- JSON schema enforcement at API level
 - Type checking for database fields
-
-### Error Handling
-- Try-except blocks for network requests
-- Retry logic with exponential backoff for rate limits
-- Graceful degradation for missing data
-
-### Utility Scripts
-- `clear_vector.py`: Verify vector database clearing
-- `clear_relational.py`: Verify relational database clearing
+- Schema enforcement at ingestion layer
 
 ---
 
@@ -300,119 +313,196 @@ Set the following in `.env`:
 ## 📚 Project Structure
 
 ```
-Mercadona-LLM/
-├── data/                       # 📁 Datos generados/descargados (Añadir a .gitignore)
-│   ├── images/                 # Imágenes de productos descargadas
-│   ├── chroma_db/              # Base de datos vectorial persistente
-│   └── exports/                # products.csv y otros volcados de datos
+AI-Product-Recommender/
+├── data/                           # 📁 Generated/downloaded data
+│   ├── images/                     # Product images by ID
+│   │   ├── 10502/
+│   │   ├── 12562/
+│   │   └── ... (26+ product folders)
+│   ├── chroma_db/                  # Vector database persistence
+│   ├── df_products.csv             # Exported product DataFrame
+│   └── ground_truth_evals/         # Evaluation ground truth
+│       └── product_info.csv        # Reference data for evaluation
 │
-├── scripts/                    # 🛠️ Scripts de mantenimiento y utilidades aisladas
-│   ├── clear_vector_db.py      # Movido desde databases/
-│   ├── clear_relational_db.py  # Movido desde databases/
-│   ├── init_db.py              # Script aislado para inicializar la BD
-│   └── run_pipeline.py         # Orquestador principal del ETL (Scraping -> AI -> DB)
+├── backend/                        # 🔧 Backend services (old structure)
+│   ├── app/
+│   │   ├── test_llm.py
+│   │   ├── user_prompt.py
+│   │   └── prompts/
+│   │       ├── LLM_decision.txt
+│   │       └── LLM_SQL.txt
 │
-├── src/                        # 💻 Código fuente principal del proyecto
-│   ├── core/                   # Configuración y utilidades globales
-│   │   ├── config.py           # Gestión de variables de .env y constantes
-│   │   └── utils.py            # Funciones genéricas (movidas desde scraping/utils.py)
+├── src/                            # 💻 New modular source code
+│   ├── ai/                         # AI/LLM orchestration
+│   │   ├── config.py               # Model provider configuration
+│   │   ├── orchestrator.py         # AIOrchestrator class (main logic)
+│   │   ├── prompts.py              # Prompt loading utilities
+│   │   ├── schemas.py              # Pydantic models (RelativePrice, NutritionalInfo, Allergens)
+│   │   ├── prompts/                # Prompt templates
+│   │   │   ├── allergens_prompt.txt
+│   │   │   ├── nutritional_info_prompt.txt
+│   │   │   └── relative_price_prompt.txt
+│   │   └── old_prompts/            # Legacy prompts
 │   │
-│   ├── scraper/                # Dominio 1: Extracción de datos
-│   │   ├── playwright_scraper.py # Tu scraper_fast_cloud.py refactorizado
-│   │   └── exceptions.py       # Manejo de errores de red/scraping
+│   ├── database/                   # Database layer
+│   │   ├── db_operations.py        # High-level DB operations
+│   │   ├── db_utils.py             # SQLAlchemy setup, Product model
+│   │   └── models.py               # (Currently empty)
 │   │
-│   ├── ai/                     # Dominio 2: Inteligencia Artificial (LLM/VLM)
-│   │   ├── groq_client.py      # Lógica de llm_tasks_groq.py
-│   │   ├── gemini_client.py    # Lógica de llm_tasks_gemini.py
-│   │   ├── schemas.py          # Modelos Pydantic (VLMResponse, LLMResponse)
-│   │   └── prompts/            # Carpeta con BRAND_ALLERGIES_prod.txt, VLM.txt, etc.
-│   │
-│   ├── db/                     # Dominio 3: Capa de persistencia
-│   │   ├── models.py           # Esquema SQLAlchemy de la tabla 'Product'
-│   │   ├── relational.py       # Conexiones y operaciones PostgreSQL/SQLite
-│   │   └── vector.py           # Conexiones y operaciones ChromaDB
-│   │
-│   └── api/                    # Dominio 4: Backend (Futuro a corto plazo)
-│       ├── routes/             # Endpoints para la búsqueda semántica
-│       └── main.py             # Entrada de FastAPI / Flask
+│   └── scraper/                    # Web scraping
+│       ├── playwright_scraper.py   # Main scraper orchestrator
+│       ├── utils.py                # Scraping utilities
+│       └── __pycache__/
 │
-├── frontend/                   # 🖥️ Interfaz de usuario (Streamlit, React, etc.)
-├── tests/                      # 🧪 Pruebas automatizadas (Próximo paso según tus notas)
-│   ├── test_scraper/
-│   ├── test_ai/
-│   └── test_db/
+├── evals/                          # 🧪 Evaluation framework
+│   ├── run_eval.py                 # Main evaluation runner
+│   ├── evaluators.py               # Comparison functions
+│   ├── metrics.py                  # Metrics calculation
+│   ├── schemas.py                  # Evaluation schemas
+│   ├── try.ipynb                   # Development notebook
+│   └── reports/                    # Evaluation results
+│       ├── 2026-03-23_195845/
+│       ├── 2026-03-23_200818/
+│       └── ... (multiple timestamped reports)
 │
-├── .env                        # Variables de entorno (No subir a Git)
-├── .env.example                # Plantilla de variables de entorno para nuevos devs
-├── .gitignore                  # Ignorar /data, .env, __pycache__, etc.
-├── requirements.txt            # Dependencias
-├── README.md                   # Documentación principal
-└── PROJECT_CONTEXT.md          # Contexto del proyecto
+├── scripts/                        # 🛠️ Utility scripts
+│   ├── clear_relational.py         # Clear relational database
+│   ├── clear_vector.py             # Clear vector database
+│   └── run_scraper_pipeline.py     # Scraper orchestrator
+│
+├── scraping/                       # 📜 Legacy scraping code
+│   ├── scraper_fast.py
+│   ├── scraper.py
+│   ├── utils.py
+│   └── measurement.txt
+│
+├── tests/                          # 🧪 Test files
+│   ├── test_ai.py                  # AIOrchestrator testing
+│   ├── test_db_conn.py
+│   ├── test_download_img.py
+│   ├── test_rate_limiter.py
+│   ├── test_scraper.py             # Scraper testing
+│   ├── test_semaphore.py
+│   └── __pycache__/
+│
+├── .venv/                          # Virtual environment
+├── .gitignore
+├── .env                            # (Not in git)
+├── .env.example                    # Environment template
+├── PROJECT_CONTEXT.md              # This file
+├── README.md
+├── TODO.txt
+├── fixes.txt
+├── pyproject.toml
+├── project_structure.txt
+└── VISUAL_OVERVIEW_EVALS.md
 ```
 
 ---
 
 ## 🎓 Key Concepts
 
-### Semantic Search
-The system uses text embeddings (768-dimensional vectors) to represent products semantically. A user's query is converted to an embedding, and the system finds the nearest products in the vector space. This enables understanding of meaning (e.g., "healthier" relates to nutritional value) rather than just keyword matching.
+### AIOrchestrator Class Pattern
+The `AIOrchestrator` class encapsulates the AI pipeline:
+- **Initialization**: Pre-builds all chains and models in `__init__()` to avoid re-initialization
+- **Task Methods**: Each extraction task is a separate async method with retry logic
+- **Orchestration**: `orchestrate_AI_pipeline()` runs all enabled tasks concurrently
+- **Error Handling**: Returns exceptions as results; caller decides how to handle failures
 
-### Dual-Database Strategy
-- **Relational DB**: Fast filtering by structured fields (price range, category, allergens)
-- **Vector DB**: Semantic matching based on meaning and similarity
-- **Hybrid Approach**: Combine both for efficient and accurate search
+### Dynamic Image Handling for VLMs
+```python
+# Build content with unpacked images
+content = [{"type": "text", "text": "Extrae la información nutricional"}]
+content.extend([{"type": "image_url", "image_url": {"url": url}} for url in urls])
 
-### JSON Schema Validation
-Groq API enforces response format at the API level using JSON schema. This ensures responses are always in the expected format (required fields, correct types), reducing parsing errors.
+# Build HumanMessage with content
+messages = [
+    SystemMessage(content=self.nutri_prompt),
+    HumanMessage(content=content)  # Each image is a separate dict in the array
+]
+```
+Key point: Images must be deserialized (unpacked with `*`) so each becomes a separate element, not a nested list.
 
-### Exponential Backoff
-When rate-limited, the system waits with exponentially increasing delays (1s, 2s, 4s, 8s, etc.) before retrying, preventing hammering the API.
+### Semantic Search Strategy
+- **Embeddings Model**: BAAI/bge-m3 (multilingual, 768-dimensional)
+- **Storage**: Chroma vector database with persistent storage
+- **Query Process**: Convert user query to embedding, find K nearest neighbors
+- **Metadata**: Product ID stored with embedding for O(1) lookup
+
+### Retry Logic with Tenacity
+```python
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=60),
+    retry=retry_if_exception_type(Exception)
+)
+```
+- Exponential backoff: 2s, 4s, 8s, 16s, 32s, 60s
+- Retries up to 5 times
+- Logs attempt number and exception details
+
+### Multi-Provider AI Setup
+- **Price Classification**: Groq (llama-3.3-70b) - fast, cost-effective
+- **Allergen Extraction**: Groq (moonshot/kimi-k2) - specialized for text
+- **Nutritional Info**: Google Gemini (gemini-3.1-flash-lite) - best for vision tasks
 
 ---
 
 ## 🔮 Future Enhancements
 
-### Short-term
-1. **Multimodal Search**: Include image similarity in semantic search
-2. **Batch Processing**: Process multiple products in parallel
-3. **Advanced Filtering**: Combine semantic search with structured filters
-4. **Caching**: Cache embeddings and frequent queries
+### Short-term (Next Sprint)
+1. **Async Database Operations**: Implement async SQLAlchemy for non-blocking DB calls
+2. **Batch Processing**: Group products for parallel LLM/VLM requests
+3. **Caching Layer**: Cache embeddings and frequent LLM responses
+4. **Improved Error Recovery**: Implement DLQ (Dead Letter Queue) for failed products
+5. **Verbose Output**: Add flag to display predicted vs ground truth data
 
-### Medium-term
+### Medium-term (Q2 2026)
 1. **User Preferences**: Personalize recommendations based on user history
 2. **Price Tracking**: Monitor price changes over time
-3. **Availability Alerts**: Notify users when products become available
-4. **Cross-store Comparison**: Compare Mercadona with other supermarkets
+3. **Availability Alerts**: Notify users when products become available/unavailable
+4. **Image Similarity**: Add visual similarity to semantic search
+5. **Distributed Scraping**: Scale to handle multiple product catalogs
 
-### Long-term
-1. **Custom Models**: Train domain-specific models for better extraction
-2. **Distributed Scraping**: Scale to multiple data sources
-3. **Mobile App**: User-friendly interface for recommendations
-4. **Machine Learning Ranking**: Learn from user interactions
+### Long-term (Q3-Q4 2026)
+1. **Custom Fine-tuned Models**: Train domain-specific models for better extraction
+2. **Cross-store Comparison**: Compare Mercadona with El Corte Inglés, Carrefour, etc.
+3. **Mobile App**: React Native or Flutter for iOS/Android
+4. **ML-based Ranking**: Learn from user interactions to improve recommendations
+5. **Real-time Updates**: WebSocket support for live price/availability changes
 
 ---
 
 ## 📝 Notes & Observations
 
-### Technical Debt
-1. No automated database migrations (manual schema updates)
-2. Hardcoded constants (wait times, concurrency limits)
-3. Limited error recovery mechanisms
-4. No logging framework (using print statements)
+### Architecture Improvements Made
+1. **Class-based Orchestration**: Moved from functional to OOP pattern for better state management
+2. **LangChain Integration**: Standardized LLM/VLM calls through LangChain abstractions
+3. **Provider Flexibility**: Easy switching between Groq, Google, and other providers
+4. **Structured Output**: Pydantic models ensure type safety and validation
+5. **Retry Resilience**: Tenacity decorators provide declarative retry logic
 
-### Best Practices to Implement
-1. Use structured logging (e.g., `logging` module)
-2. Implement database migration tool (Alembic)
-3. Add comprehensive test coverage
-4. Use dependency injection for better testability
-5. Document API contracts with OpenAPI/Swagger
+### Technical Debt Items
+1. **No Database Migrations**: Manual schema updates; should use Alembic
+2. **Hardcoded Constants**: `WAIT_TIME`, retry counts should be configurable
+3. **Logging**: Using print statements; should migrate to logging module
+4. **No Async DB Layer**: Database operations are synchronous (blocking)
+5. **Evaluation Dependency**: eval depends on test_ai.py; should be decoupled
+
+### Code Quality Recommendations
+1. Implement structured logging (logging.getLogger)
+2. Add comprehensive docstrings to all functions
+3. Use dependency injection for better testability
+4. Add type hints throughout the codebase
+5. Create integration tests for end-to-end pipelines
+6. Implement database migrations with Alembic
 
 ### Performance Optimization Opportunities
-1. Batch API requests to reduce latency
-2. Implement caching layer (Redis)
-3. Use connection pooling more aggressively
-4. Parallelize image processing
-5. Optimize prompt templates for faster inference
+1. **Connection Pooling**: Increase DB pool size for concurrent writes
+2. **Batch Embeddings**: Group products and generate embeddings in batches
+3. **Image Compression**: Pre-compress images before VLM processing
+4. **Query Caching**: Cache frequently accessed product queries
+5. **Async I/O**: Convert blocking I/O operations to async where possible
 
 ---
 
@@ -435,20 +525,96 @@ When rate-limited, the system waits with exponentially increasing delays (1s, 2s
 
 ## 📞 Support & Resources
 
-### Key Files for Understanding
-- `scraper_fast_cloud.py`: Complete data pipeline
-- `llm_tasks_groq.py`: AI model integration
-- `db_utils.py`: Database schema and setup
-- `prompts/`: Prompt engineering examples
+### Key Files for Understanding the System
+- `src/ai/orchestrator.py`: Core AI pipeline and task orchestration
+- `src/scraper/playwright_scraper.py`: Web scraping implementation
+- `src/database/db_utils.py`: Database schema and setup
+- `src/ai/config.py`: Model provider configuration
+- `evals/run_eval.py`: Evaluation framework
 
-### API Documentation
-- Groq: https://console.groq.com/docs
-- Chroma: https://docs.trychroma.com
-- SQLAlchemy: https://docs.sqlalchemy.org
-- Playwright: https://playwright.dev/python
+### API Documentation & References
+- **LangChain**: https://python.langchain.com/docs/
+- **Groq API**: https://console.groq.com/docs
+- **Google Gemini**: https://ai.google.dev/docs
+- **Chroma**: https://docs.trychroma.com
+- **SQLAlchemy**: https://docs.sqlalchemy.org
+- **Playwright**: https://playwright.dev/python
+- **Tenacity**: https://tenacity.readthedocs.io/
+
+### Common Commands
+```bash
+# Run scraper pipeline
+python -m src.scraper.playwright_scraper
+
+# Run AI tests
+python tests/test_ai.py
+
+# Run evaluation
+python evals/run_eval.py --limit 5
+
+# Clear databases
+python scripts/clear_relational.py
+python scripts/clear_vector.py
+
+# Initialize database
+python -m src.database.db_operations
+```
+
+### Debugging Tips
+1. Check `.env` for missing or incorrect API keys
+2. Monitor API rate limits in error messages
+3. Enable verbose logging in LangChain: `langchain.debug = True`
+4. Use Playwright screenshots for scraping issues: `await page.screenshot(path="debug.png")`
+5. Check database logs for connection issues
+6. Validate Pydantic models with: `model.model_validate_json(response_text)`
 
 ---
 
-**Last Updated**: March 16, 2026  
-**Project Version**: 1.0 (Active Development)  
-**Status**: Functional with ongoing enhancements
+---
+
+## 📋 Quick Reference: AIOrchestrator Usage
+
+```python
+from src.ai.orchestrator import AIOrchestrator
+
+# Initialize orchestrator (pre-loads models and chains)
+orchestrator = AIOrchestrator()
+
+# Run full pipeline
+result = await orchestrator.orchestrate_AI_pipeline(
+    relative_price=True,
+    nutritional_info=True,
+    allergens=True,
+    product_ID="22966",
+    title="Cereal Copos de Maiz",
+    price_description="250g",
+    image_urls=["url1", "url2"],
+    product_description="Sin azúcares añadidos..."
+)
+
+# Or run individual tasks
+price = await orchestrator.extract_relative_price(title, price_desc)
+nutrition = await orchestrator.extract_nutritional_info(image_urls)
+allergens = await orchestrator.extract_allergens(product_desc)
+```
+
+### Expected Output
+```json
+{
+  "precio_relativo": "estandar",
+  "marca": "Hacendado",
+  "atributos": ["sin gluten", "vegano"],
+  "energia_kcal": 350,
+  "grasas_g": 3.5,
+  "carbohidratos_g": 85,
+  "azucar_g": 1,
+  "alergenos": ["trazas de frutos secos"]
+}
+```
+
+---
+
+**Last Updated**: March 30, 2026  
+**Project Version**: 1.1 (Refactored with AIOrchestrator)  
+**Status**: Fully Functional with Active Development  
+**Main Contributor**: Gonzalo Martín

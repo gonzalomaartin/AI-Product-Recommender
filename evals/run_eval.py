@@ -17,7 +17,7 @@ DF_PATH = BASE_PATH / "data" / "ground_truth_evals" / "product_info.csv"
 BASE_PRODUCT_URL = "https://tienda.mercadona.es/product/"
 
 
-def run_evaluations(limit: int = None):
+def run_evaluations(limit: int = None, report: bool = False):
     """Run all evaluations and export results."""
     
     # Load ground truth
@@ -31,14 +31,14 @@ def run_evaluations(limit: int = None):
     
     # Run evaluations
     results = asyncio.run(run_batch_evaluation(df))
+    if report: 
+        print_evaluation_summary(results)
 
-    print_evaluation_summary(results)
-
-    metrics_summary = calculate_metrics(results)
-    
-    print(f"\n📁 Saving the reports")
-    export_summary(metrics_summary, "metrics")
-    export_summary(results, "raw_results")
+        metrics_summary = calculate_metrics(results)
+        
+        print(f"\n📁 Saving the reports")
+        export_summary(metrics_summary, "metrics")
+        export_summary(results, "raw_results")
 
     print(f"✅ Evaluation complete!")
     
@@ -69,6 +69,8 @@ async def run_single_evaluation(product_url: str, ground_truth: dict, current: i
     
     try:
         predicted = await test_ai(product_url, product_ID)
+        allergens_info = predicted["alergenos"] # Making it reusable 
+        predicted["alergenos"] = [x["nombre"] for x in allergens_info]
         
         # Run comparisons
         comparisons = {}
@@ -101,6 +103,12 @@ if __name__ == "__main__":
         default=None, 
         help="Define the number of test cases to execute"
     )
+    parser.add_argument(
+        '--report', 
+        action='store_false', 
+        default=True, 
+        help="When this flag is present, it won't create a report"
+    )
     
     args = parser.parse_args()
-    run_evaluations(limit=args.limit)
+    run_evaluations(limit=args.limit, report=args.report)

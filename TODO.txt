@@ -6,9 +6,9 @@ specially for extracting information from a product (make it supermarket agnosti
 each function should have its max retries 
 -Remove grasas_mono y grasas_poli from the schema, prompt and ground truth dataset as it's only presents in oil (not worth it calculating)
 -The eval can't depend on a test, I should create a utils function or something that handles getting information from a single product
--Try to get the list of allergens from the ingredient list on the images (compare precision & recall)
 -Add a verbose tag to show the predicted and extracted information if not hide it
 -Test only a couple of things (allergens, nutritional information) not all the features of the test through the terminal 
+-Add reflexion to the allergens as it's something critical more valuable than the relative price (which might be biased) or the claims (extra information)
 
 
 
