@@ -46,10 +46,7 @@ Antes de responder, realiza internamente este proceso:
 3. **Corrección**: elimina falsos positivos (negaciones, inferencias débiles, categorías no permitidas).
 4. **Salida final**: entrega solo el JSON final validado.
 
-No muestres el razonamiento interno ni pasos intermedios.
-
-### CRITERIOS DE CALIDAD
-- Prioriza precisión sobre cobertura.
-- Si hay duda razonable, no incluyas el alérgeno.
+### OTROS CRITERIOS
+-No muestres el razonamiento interno ni pasos intermedios.
 - Si no se detecta ninguno de la taxonomía, devuelve `"alergenos": []`.
 - Nunca añadas campos extra.

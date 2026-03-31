@@ -92,7 +92,6 @@ class AIOrchestrator:
             "format_instructions": self.aller_parser.get_format_instructions()
         }
         initial_result = await self._safe_invoke(self.aller_chain, initial_inputs, "initial allergens")
-        return initial_result 
         initial_result = initial_result.model_dump() 
 
         # Applying reflection to the initial answer

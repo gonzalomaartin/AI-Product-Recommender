@@ -34,11 +34,8 @@ os.makedirs(os.path.dirname(persist_directory), exist_ok=True)
 
 # Use persistent local directory
 vector_client = chromadb.PersistentClient(path = persist_directory)
-existing_collections = [col.name for col in vector_client.list_collections()]
-if COLLECTION_NAME in existing_collections:
+try:
     collection = vector_client.get_collection(COLLECTION_NAME)
-    print(f"Collection '{COLLECTION_NAME}' already exists. Using the existing collection.")
-else:
+except Exception:
     collection = vector_client.create_collection(COLLECTION_NAME)
-    print(f"Collection '{COLLECTION_NAME}' created successfully.")
-
+    print(f"✅ Successfully created collection:  '{COLLECTION_NAME}'")

@@ -7,7 +7,7 @@ HUMAN_MESSAGE_DIR = BASE_DIR / "HumanMessages"
 
 def load_file(DIR, file_name: str) -> str:
     """Load a prompt from a local file (synchronous)."""
-    prompt_path = PROMPTS_DIR / file_name
+    prompt_path = DIR / file_name
     if not prompt_path.exists():
         raise FileNotFoundError(f"Prompt file not found: {prompt_path}")
     return prompt_path.read_text(encoding="utf-8")
@@ -32,7 +32,8 @@ def load_all_prompts() -> tuple[str, str, str, str]:
     return (
         load_relative_price_prompt(),
         load_nutritional_info_prompt(),
-        load_allergens_prompt()
+        load_allergens_prompt(), 
+        load_reflection_allergens_prompt()
     )
 
 def load_relative_price_human_message() -> str: 
@@ -44,10 +45,10 @@ def load_allergens_human_message() -> str:
 def load_reflection_allergens_human_message() -> str: 
     return load_file(HUMAN_MESSAGE_DIR, "REFLECTION_ALLERGENS.txt")
 
-def load_nutritional_info_prompt() -> str: 
+def load_nutritional_info_message() -> str: 
     return load_file(HUMAN_MESSAGE_DIR, "NUTRITIONAL_INFO.txt")
 
-def load_all_human_message_prompts() -> tuple[str, str]: 
+def load_all_human_messages() -> tuple[str, str]: 
     "Load all human messages syncronously"
     return ( 
         load_allergens_human_message(), 

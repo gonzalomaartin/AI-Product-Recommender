@@ -246,7 +246,7 @@ async def get_items(page: Page, subcategory: str):
             print(json.dumps(item_info, indent=4, ensure_ascii=False)) # Prety printing the dictionary with all the information (one line for each key, value)
 
             item_embedding_text.update(llm_info)
-            item_embedding["alergenos"] = ", ".join([x["nombre"] for x in allergens_info])
+            item_embedding_text["alergenos"] = ", ".join([x["nombre"] for x in allergens_info])
 
             lines = []
             for k, v in item_embedding_text.items():

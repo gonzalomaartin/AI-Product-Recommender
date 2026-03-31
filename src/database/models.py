@@ -6,7 +6,7 @@ Base = declarative_base()
 class Product(Base): # Explore if you're going to save it in one or two tables
     __tablename__ = "products"
 
-    ID_producto = Column(String, primary_key=True, autoincrement=True)
+    ID_producto = Column(Integer, primary_key=True, autoincrement=True)
     categoria = Column(String)
     subcategoria = Column(String)
 
@@ -43,7 +43,7 @@ class ProductAllergen(Base):
     __tablename__ = "product_allergens"
 
     ID_alergeno = Column(Integer, primary_key=True, autoincrement=True)
-    ID_producto = Column(String, ForeignKey("products.ID_producto"), nullable=False)
+    ID_producto = Column(Integer, ForeignKey("products.ID_producto"), nullable=False)
     nombre = Column(String) 
     fuente = Column(String)  
     confianza = Column(Float)  

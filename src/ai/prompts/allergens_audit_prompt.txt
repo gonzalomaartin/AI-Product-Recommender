@@ -72,18 +72,8 @@ Antes de responder, realiza internamente:
 
 No muestres razonamiento interno.
 
-### FORMATO DE SALIDA (OBLIGATORIO)
-Devuelve **solo** JSON válido y ajústalo estrictamente al schema estructurado que se proporciona en runtime.
-
 Reglas de compatibilidad con schema:
 - Usa la estructura de objetos esperada por el sistema para faltantes, sobrantes y corregidos.
 - Conserva y/o corrige campos de trazabilidad relevantes (por ejemplo `nombre`, `fuente`, `confianza`, `evidencia`) según la evidencia textual.
 - No incluyas texto libre fuera del JSON.
 
-### CRITERIOS DE CALIDAD
-- Prioriza precisión sobre cobertura.
-- Si hay duda razonable, no afirmes presencia.
-- Si no hay cambios respecto a la entrada, marca el estado equivalente a "ok" según tu schema.
-- Si detectas faltantes o sobrantes, marca el estado equivalente a "revisado" según tu schema.
-- No inventes evidencia; usa fragmentos textuales del producto cuando sea posible.
-- Nunca añadas campos extra fuera de lo permitido por el schema ni texto fuera del JSON.

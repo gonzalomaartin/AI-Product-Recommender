@@ -1,18 +1,12 @@
-from src.database.db_utils import collection
+from src.database.db_utils import COLLECTION_NAME, vector_client
 
 def clear_chromadb():
     try:
-        # Check if the collection exists
-        if collection is not None:
-            # Retrieve all points in the collection
-            items = collection.get(include=[])   # faster: do not fetch embeddings/documents
-            ids = items["ids"]
-            collection.delete(ids=ids)
-            print("✅ Successfully cleared all data from the ChromaDB collection.")
-        else:
-            print("⚠️ No collection found. Ensure the collection is properly initialized.")
+        vector_client.delete_collection(COLLECTION_NAME)
+        vector_client.create_collection(COLLECTION_NAME)
+        print("✅ Collection reset successfully.")
     except Exception as e:
-        print(f"❌ Failed to clear ChromaDB: {e}")
+        print(f"❌ Failed to reset collection: {e}")
 
 if __name__ == "__main__":
     clear_chromadb()
