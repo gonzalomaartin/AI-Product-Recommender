@@ -1,0 +1,16 @@
+=== INPUT ===
+
+DESCRIPCION DEL PRODUCTO:
+{product_description}
+
+ALERGENOS PREDICHOS:
+{initial_result}
+
+=== TAREA ===
+Valida y corrige los alergenos predichos a partir de la descripcion del producto.
+
+=== FORMATO OUTPUT ===
+{format_instructions}
+
+=== RESTRICCIONES ===
+- Devuelve solo JSON valido

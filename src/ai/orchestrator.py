@@ -7,13 +7,14 @@ from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_excep
 from typing import Any, List, Dict
 
 import src.ai.config as config 
-from src.ai.prompts import load_all_prompts
+from src.ai.prompts import load_all_prompts, load_all_human_messages
 from src.ai.schemas import NutritionalInfo, Allergens, RelativePrice
 
 
 class AIOrchestrator: 
     def __init__(self): 
-        prompts = load_all_prompts() 
+        PROMPTS = load_all_prompts() 
+        HUMAN_MESSAGES = load_all_human_messages()
         
         # 1. Pre-initialize Models
         price_llm = init_chat_model(config.RELATIVE_PRICE_MODEL, model_provider=config.RELATIVE_PRICE_PROVIDER, temperature=0)
@@ -23,28 +24,27 @@ class AIOrchestrator:
         # 2. Pre-build Chains (Structured Output where possible)
         self.price_chain = (
             ChatPromptTemplate.from_messages([
-                SystemMessage(content=prompts[0]), 
+                SystemMessage(content=PROMPTS[0]), 
                 ("human", "Titulo: {title} \n Descripcion titulo: {price_description}")
             ]) | price_llm.with_structured_output(RelativePrice)
         )
         
         # Build nutritional chain with dynamic content support
         self.nutri_llm = nutri_llm.with_structured_output(NutritionalInfo)
-        self.nutri_prompt = prompts[1]
+        self.nutri_prompt = PROMPTS[1]
 
         self.aller_parser = PydanticOutputParser(pydantic_object=Allergens)
-        self.aller_chain = (
-            ChatPromptTemplate.from_messages([
-                SystemMessage(content=prompts[2]),
-                ("human", "Descripcion del producto: {product_description} \n {format_instructions}")
-            ]) | aller_llm | self.aller_parser
-        )
-        self.aller_reflection_chain = (
-            ChatPromptTemplate.from_messages([
-                SystemMessage(content=prompts[3]),
-                ("human", "Descripcion del producto: {product_description} \n {format_instructions}")
-            ]) | aller_llm | self.aller_parser
-        )   
+        aller_prompt = ChatPromptTemplate.from_messages([
+            SystemMessage(content=PROMPTS[2]),
+            ("human", HUMAN_MESSAGES[0]),
+        ])
+        self.aller_chain = aller_prompt | aller_llm | self.aller_parser
+
+        aller_reflection_prompt = ChatPromptTemplate.from_messages([
+            SystemMessage(content=PROMPTS[3]),
+            ("human", HUMAN_MESSAGES[1]),
+        ])
+        self.aller_reflection_chain = aller_reflection_prompt | aller_llm | self.aller_parser
 
     # 3. Declarative Retries
     @retry(
@@ -92,13 +92,14 @@ class AIOrchestrator:
             "format_instructions": self.aller_parser.get_format_instructions()
         }
         initial_result = await self._safe_invoke(self.aller_chain, initial_inputs, "initial allergens")
+        return initial_result 
         initial_result = initial_result.model_dump() 
 
         # Applying reflection to the initial answer
         reflection_inputs = {
             "product_description": product_description, 
             "format_instructions": self.aller_parser.get_format_instructions(), 
-            
+            "initial_result": initial_result
         }
         return await self._safe_invoke(self.aller_reflection_chain, reflection_inputs, "reflection allergens")
 

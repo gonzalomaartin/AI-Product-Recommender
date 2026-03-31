@@ -1,0 +1,13 @@
+=== INPUT ===
+
+DESCRIPCION DEL PRODUCTO:
+{product_description}
+
+=== TAREA ===
+Extrae los alergenos a partir de la descipcion del producto.
+
+=== FORMATO OUTPUT ===
+{format_instructions}
+
+=== RESTRICCIONES ===
+- Devuelve solo JSON valido
