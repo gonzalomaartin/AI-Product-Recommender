@@ -8,8 +8,10 @@ each function should have its max retries
 -The eval can't depend on a test, I should create a utils function or something that handles getting information from a single product
 -Add a verbose tag to show the predicted and extracted information if not hide it
 -Test only a couple of things (allergens, nutritional information) not all the features of the test through the terminal 
--Add reflexion to the allergens as it's something critical more valuable than the relative price (which might be biased) or the claims (extra information)
-
+-Implement the agentic workflow on the client in LangGraph where there's a router agent as an edge that decides whether the customer prompt will benefit from a SQL query and 
+execute that query to add it as context. The other information that will be added to the context comes from hybrid search + re-ranker/LLM, preferably LLM as it can give 
+the reasoning of the decision. 
+-When you click into a product it will give you the supermarkets it's being selled and also similar products (closest embeddings)
 
 
 ARCHITECTURE: 

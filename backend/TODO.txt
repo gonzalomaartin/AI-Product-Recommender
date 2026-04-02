@@ -1,0 +1,33 @@
+IDEAS / TODO: 
+
+6. Resumen de decisiones IMPORTANTES
+UX
+❌ no cambies de página
+✅ usa estados (explore vs search)
+✅ añade botón volver + limpiar
+Backend
+✅ /search unificado
+❌ no separar semantic vs keyword en API
+✅ lógica en services
+IA
+❌ no usar siempre IA
+✅ sistema híbrido
+
+if is_semantic(query):
+    run_semantic_pipeline()
+else:
+    run_sql_search()
+
+
+👉 Tu / (home) debería ser el marketplace (/products)
+@router.get("/")
+def home():
+    return get_products()
+
+👉 / y /products comparten lógica
+
+PREGUNTAS: 
+Ahora quiero saber como realizarias la busqueda clasica, harias keyword matching con BM-25? Y como decides si un input debe ser tratado con busqueda clasica o IA? 
+Quiero que me realices dos prompts, uno para generar una imagen de como se veria la aplicación en el modo de marketplace y otro de como se veria en modo "Search State"  en donde el usuario ha hecho una query y se ha tratado con IA 
+y por último como se veria la aplicación cuando la consulta se ha trtado con busqueda clásica (aquí también se tendría que ver la sección de productos relacionados), pero 
+se pueden mostrar más productos (más fácil hacer un re-ranking de los productos que mediante IA o no?)

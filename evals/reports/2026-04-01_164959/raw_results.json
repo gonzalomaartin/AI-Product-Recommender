@@ -1,0 +1,2378 @@
+[
+    {
+        "product_id": 22966,
+        "url": "https://tienda.mercadona.es/product/22966",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": true,
+                "difference": 0,
+                "truth": "barato",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: barato, Obtenido: 'barato'. Diferencia: 0"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "gluten, lactosa, frutos de cascara, soja",
+                "predicted": "lactosa, gluten, frutos de cascara, soja",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "sin azucar anadido",
+                "predicted": "sin azucar anadido",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1583,
+                "predicted": 1583,
+                "details": "❌ Comparando energia_kj. Esperado: 1583.0, Obtenido: 1583.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 373,
+                "predicted": 373,
+                "details": "❌ Comparando energia_kcal. Esperado: 373.0, Obtenido: 373.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.1,
+                "predicted": 1.1,
+                "details": "❌ Comparando grasas_g. Esperado: 1.1, Obtenido: 1.1, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.4,
+                "predicted": 0.4,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.4, Obtenido: 0.4, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 82.0,
+                "predicted": 82.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 82.0, Obtenido: 82.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.9,
+                "predicted": 0.9,
+                "details": "❌ Comparando azucar_g. Esperado: 0.9, Obtenido: 0.9, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 4.4,
+                "predicted": 4.4,
+                "details": "❌ Comparando fibra_g. Esperado: 4.4, Obtenido: 4.4, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 6.7,
+                "predicted": 6.7,
+                "details": "❌ Comparando proteina_g. Esperado: 6.7, Obtenido: 6.7, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.0,
+                "predicted": 1.0,
+                "details": "❌ Comparando sal_g. Esperado: 1.0, Obtenido: 1.0, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 9210,
+        "url": "https://tienda.mercadona.es/product/9210",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Kellogg's",
+                "predicted": "Kellogg's",
+                "details": "❌ Comparando marca. Esperado: 'kellogg's', Obtenido: 'kellogg's'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "caro",
+                "predicted": "estandar",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: caro, Obtenido: 'estandar'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "gluten",
+                "predicted": "gluten",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1604,
+                "predicted": 1604,
+                "details": "❌ Comparando energia_kj. Esperado: 1604.0, Obtenido: 1604.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 378,
+                "predicted": 378,
+                "details": "❌ Comparando energia_kcal. Esperado: 378.0, Obtenido: 378.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.9,
+                "predicted": 0.9,
+                "details": "❌ Comparando grasas_g. Esperado: 0.9, Obtenido: 0.9, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.2,
+                "predicted": 0.2,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.2, Obtenido: 0.2, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 84.0,
+                "predicted": 84.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 84.0, Obtenido: 84.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 8.0,
+                "predicted": 8.0,
+                "details": "❌ Comparando azucar_g. Esperado: 8.0, Obtenido: 8.0, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3.0,
+                "predicted": 3.0,
+                "details": "❌ Comparando fibra_g. Esperado: 3.0, Obtenido: 3.0, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 7.0,
+                "predicted": 7.0,
+                "details": "❌ Comparando proteina_g. Esperado: 7.0, Obtenido: 7.0, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.1,
+                "predicted": 1.1,
+                "details": "❌ Comparando sal_g. Esperado: 1.1, Obtenido: 1.1, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 4241,
+        "url": "https://tienda.mercadona.es/product/4241",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 2,
+                "truth": "caro|muy caro",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: caro|muy caro, Obtenido: 'barato'. Diferencia: 2"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3378,
+                "predicted": 3378,
+                "details": "❌ Comparando energia_kj. Esperado: 3378.0, Obtenido: 3378.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 822,
+                "predicted": 822,
+                "details": "❌ Comparando energia_kcal. Esperado: 822.0, Obtenido: 822.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 91.4,
+                "predicted": 91.4,
+                "details": "❌ Comparando grasas_g. Esperado: 91.4, Obtenido: 91.4, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 12.8,
+                "predicted": 12.8,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 12.8, Obtenido: 12.8, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.0,
+                "predicted": 0.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 0.0, Obtenido: 0.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.0,
+                "predicted": 0.0,
+                "details": "❌ Comparando azucar_g. Esperado: 0.0, Obtenido: 0.0, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.0,
+                "predicted": 0.0,
+                "details": "❌ Comparando proteina_g. Esperado: 0.0, Obtenido: 0.0, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.0,
+                "predicted": 0.0,
+                "details": "❌ Comparando sal_g. Esperado: 0.0, Obtenido: 0.0, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 21756,
+        "url": "https://tienda.mercadona.es/product/21756",
+        "comparisons": {
+            "marca": {
+                "passed": false,
+                "invalid": false,
+                "truth": "Campo Nature",
+                "predicted": null,
+                "details": "❌ Comparando marca. Esperado: 'campo nature', Obtenido: 'None'"
+            },
+            "precio_relativo": {
+                "passed": true,
+                "difference": 0,
+                "truth": "muy caro",
+                "predicted": "muy caro",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: muy caro, Obtenido: 'muy caro'. Diferencia: 0"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "ecologico",
+                "predicted": "ecologico",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1502,
+                "predicted": 1502,
+                "details": "❌ Comparando energia_kj. Esperado: 1502.0, Obtenido: 1502.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 365,
+                "predicted": 365,
+                "details": "❌ Comparando energia_kcal. Esperado: 365.0, Obtenido: 365.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 37.2,
+                "predicted": 37.2,
+                "details": "❌ Comparando grasas_g. Esperado: 37.2, Obtenido: 37.2, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 6.5,
+                "predicted": 6.5,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 6.5, Obtenido: 6.5, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 8.9,
+                "predicted": 8.9,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 8.9, Obtenido: 8.9, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.5,
+                "predicted": 0.5,
+                "details": "❌ Comparando azucar_g. Esperado: 0.5, Obtenido: 0.5, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 4.0,
+                "predicted": 4.0,
+                "details": "❌ Comparando fibra_g. Esperado: 4.0, Obtenido: 4.0, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.6,
+                "predicted": 1.6,
+                "details": "❌ Comparando proteina_g. Esperado: 1.6, Obtenido: 1.6, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 4.0,
+                "predicted": 4.0,
+                "details": "❌ Comparando sal_g. Esperado: 4.0, Obtenido: 4.0, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 19958,
+        "url": "https://tienda.mercadona.es/product/19958",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Antonio",
+                "predicted": "Antonio",
+                "details": "❌ Comparando marca. Esperado: 'antonio', Obtenido: 'antonio'"
+            },
+            "precio_relativo": {
+                "passed": true,
+                "difference": 0,
+                "truth": "caro|muy caro",
+                "predicted": "caro",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: caro|muy caro, Obtenido: 'caro'. Diferencia: 0"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "mostaza, sesamo, sulfitos",
+                "predicted": "mostaza, sulfitos, sesamo",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "fuente de fibra",
+                "predicted": "fuente de fibra",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 79,
+                "predicted": 79,
+                "details": "❌ Comparando energia_kj. Esperado: 79.0, Obtenido: 79.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 19,
+                "predicted": 19,
+                "details": "❌ Comparando energia_kcal. Esperado: 19.0, Obtenido: 19.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.4,
+                "predicted": 0.4,
+                "details": "❌ Comparando grasas_g. Esperado: 0.4, Obtenido: 0.4, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.1,
+                "predicted": 0.1,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.1, Obtenido: 0.1, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.8,
+                "predicted": 0.8,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 0.8, Obtenido: 0.8, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.6,
+                "predicted": 0.6,
+                "details": "❌ Comparando azucar_g. Esperado: 0.6, Obtenido: 0.6, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 4.2,
+                "predicted": 4.2,
+                "details": "❌ Comparando fibra_g. Esperado: 4.2, Obtenido: 4.2, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.0,
+                "predicted": 1.0,
+                "details": "❌ Comparando proteina_g. Esperado: 1.0, Obtenido: 1.0, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.2,
+                "predicted": 1.2,
+                "details": "❌ Comparando sal_g. Esperado: 1.2, Obtenido: 1.2, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 19867,
+        "url": "https://tienda.mercadona.es/product/19867",
+        "comparisons": {
+            "marca": {
+                "passed": false,
+                "invalid": false,
+                "truth": "Enervit",
+                "predicted": "Enervit Sport",
+                "details": "❌ Comparando marca. Esperado: 'enervit', Obtenido: 'enervit sport'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "muy caro",
+                "predicted": "caro",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: muy caro, Obtenido: 'caro'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "lactosa, soja, frutos de cascara, sesamo, cacahuete",
+                "predicted": "soja, sesamo, cacahuete, frutos de cascara, lactosa",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "alto en proteina, bajo en azucar",
+                "predicted": "bajo en azucar, alto en proteina",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1612,
+                "predicted": 1612,
+                "details": "❌ Comparando energia_kj. Esperado: 1612.0, Obtenido: 1612.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 386,
+                "predicted": 386,
+                "details": "❌ Comparando energia_kcal. Esperado: 386.0, Obtenido: 386.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 17.0,
+                "predicted": 17.0,
+                "details": "❌ Comparando grasas_g. Esperado: 17.0, Obtenido: 17.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 9.0,
+                "predicted": 9.0,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 9.0, Obtenido: 9.0, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 38.0,
+                "predicted": 38.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 38.0, Obtenido: 38.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.9,
+                "predicted": 1.9,
+                "details": "❌ Comparando azucar_g. Esperado: 1.9, Obtenido: 1.9, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 33.0,
+                "predicted": 33.0,
+                "details": "❌ Comparando proteina_g. Esperado: 33.0, Obtenido: 33.0, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.2,
+                "predicted": 0.2,
+                "details": "❌ Comparando sal_g. Esperado: 0.2, Obtenido: 0.2, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 14213,
+        "url": "https://tienda.mercadona.es/product/14213",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "estandar",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: estandar, Obtenido: 'barato'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": " gluten, lactosa, soja, mostaza",
+                "predicted": "gluten, lactosa, soja, mostaza",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "fuente de fibra",
+                "predicted": "fuente de fibra",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1996,
+                "predicted": 1996,
+                "details": "❌ Comparando energia_kj. Esperado: 1996.0, Obtenido: 1996.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 477,
+                "predicted": 477,
+                "details": "❌ Comparando energia_kcal. Esperado: 477.0, Obtenido: 477.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 21.0,
+                "predicted": 21.0,
+                "details": "❌ Comparando grasas_g. Esperado: 21.0, Obtenido: 21.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 2.3,
+                "predicted": 2.3,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 2.3, Obtenido: 2.3, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 61.0,
+                "predicted": 61.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 61.0, Obtenido: 61.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 18.0,
+                "predicted": 18.0,
+                "details": "❌ Comparando azucar_g. Esperado: 18.0, Obtenido: 18.0, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 6.8,
+                "predicted": 6.8,
+                "details": "❌ Comparando fibra_g. Esperado: 6.8, Obtenido: 6.8, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 7.5,
+                "predicted": 7.5,
+                "details": "❌ Comparando proteina_g. Esperado: 7.5, Obtenido: 7.5, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.1,
+                "predicted": 1.1,
+                "details": "❌ Comparando sal_g. Esperado: 1.1, Obtenido: 1.1, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 14212,
+        "url": "https://tienda.mercadona.es/product/14212",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": true,
+                "difference": 0,
+                "truth": "barato",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: barato, Obtenido: 'barato'. Diferencia: 0"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "gluten, lactosa, mostaza, frutos de cascara, huevo, soja",
+                "predicted": "gluten, lactosa, huevo, frutos de cascara, soja, mostaza",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 2068,
+                "predicted": 2068,
+                "details": "❌ Comparando energia_kj. Esperado: 2068.0, Obtenido: 2068.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 494,
+                "predicted": 494,
+                "details": "❌ Comparando energia_kcal. Esperado: 494.0, Obtenido: 494.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 24.0,
+                "predicted": 24.0,
+                "details": "❌ Comparando grasas_g. Esperado: 24.0, Obtenido: 24.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 14.0,
+                "predicted": 14.0,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 14.0, Obtenido: 14.0, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 62.0,
+                "predicted": 62.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 62.0, Obtenido: 62.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": false,
+                "difference": 6.0,
+                "truth": 33.0,
+                "predicted": 39.0,
+                "details": "❌ Comparando azucar_g. Esperado: 33.0, Obtenido: 39.0, Diferencia: 6.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 4.0,
+                "predicted": 4.0,
+                "details": "❌ Comparando fibra_g. Esperado: 4.0, Obtenido: 4.0, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 5.5,
+                "predicted": 5.5,
+                "details": "❌ Comparando proteina_g. Esperado: 5.5, Obtenido: 5.5, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.53,
+                "predicted": 0.53,
+                "details": "❌ Comparando sal_g. Esperado: 0.53, Obtenido: 0.53, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 14269,
+        "url": "https://tienda.mercadona.es/product/14269",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "La Carloteña",
+                "predicted": "La Carloteña",
+                "details": "❌ Comparando marca. Esperado: 'la carloteña', Obtenido: 'la carloteña'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "muy caro",
+                "predicted": "caro",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: muy caro, Obtenido: 'caro'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": false,
+                "precision": 0.75,
+                "recall": 1.0,
+                "truth": "soja, frutos de cascara, huevo",
+                "predicted": "soja, lactosa, frutos de cascara, huevo",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: {'lactosa'}, Precision: 0.75, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "alto en proteina",
+                "predicted": "alto en proteina",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 512,
+                "predicted": 512,
+                "details": "❌ Comparando energia_kj. Esperado: 512.0, Obtenido: 512.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 122,
+                "predicted": 122,
+                "details": "❌ Comparando energia_kcal. Esperado: 122.0, Obtenido: 122.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 6.0,
+                "predicted": 6.0,
+                "details": "❌ Comparando grasas_g. Esperado: 6.0, Obtenido: 6.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.6,
+                "predicted": 0.6,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.6, Obtenido: 0.6, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.5,
+                "predicted": 0.5,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 0.5, Obtenido: 0.5, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.5,
+                "predicted": 0.5,
+                "details": "❌ Comparando azucar_g. Esperado: 0.5, Obtenido: 0.5, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 17.0,
+                "predicted": 17.0,
+                "details": "❌ Comparando proteina_g. Esperado: 17.0, Obtenido: 17.0, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.7,
+                "predicted": 1.7,
+                "details": "❌ Comparando sal_g. Esperado: 1.7, Obtenido: 1.7, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 52336,
+        "url": "https://tienda.mercadona.es/product/52336",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 2,
+                "truth": "caro|muy caro",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: caro|muy caro, Obtenido: 'barato'. Diferencia: 2"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "lactosa, pescado",
+                "predicted": "lactosa, pescado",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": false,
+                "precision": 0.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "sin conservantes",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: {'sin conservantes'}, Precision: 0.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1155,
+                "predicted": 1155,
+                "details": "❌ Comparando energia_kj. Esperado: 1155.0, Obtenido: 1155.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 280,
+                "predicted": 280,
+                "details": "❌ Comparando energia_kcal. Esperado: 280.0, Obtenido: 280.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 26.8,
+                "predicted": 26.8,
+                "details": "❌ Comparando grasas_g. Esperado: 26.8, Obtenido: 26.8, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3.4,
+                "predicted": 3.4,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 3.4, Obtenido: 3.4, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.7,
+                "predicted": 1.7,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 1.7, Obtenido: 1.7, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.7,
+                "predicted": 1.7,
+                "details": "❌ Comparando azucar_g. Esperado: 1.7, Obtenido: 1.7, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 7.9,
+                "predicted": 7.9,
+                "details": "❌ Comparando proteina_g. Esperado: 7.9, Obtenido: 7.9, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 2.0,
+                "predicted": 2.0,
+                "details": "❌ Comparando sal_g. Esperado: 2.0, Obtenido: 2.0, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 16812,
+        "url": "https://tienda.mercadona.es/product/16812",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "caro|muy caro",
+                "predicted": "estandar",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: caro|muy caro, Obtenido: 'estandar'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "pescado",
+                "predicted": "pescado",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1371,
+                "predicted": 1371,
+                "details": "❌ Comparando energia_kj. Esperado: 1371.0, Obtenido: 1371.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 331,
+                "predicted": 331,
+                "details": "❌ Comparando energia_kcal. Esperado: 331.0, Obtenido: 331.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 28.0,
+                "predicted": 28.0,
+                "details": "❌ Comparando grasas_g. Esperado: 28.0, Obtenido: 28.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 4.1,
+                "predicted": 4.1,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 4.1, Obtenido: 4.1, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.7,
+                "predicted": 0.7,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 0.7, Obtenido: 0.7, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.5,
+                "predicted": 0.5,
+                "details": "❌ Comparando azucar_g. Esperado: 0.5, Obtenido: 0.5, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 19.0,
+                "predicted": 19.0,
+                "details": "❌ Comparando proteina_g. Esperado: 19.0, Obtenido: 19.0, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.78,
+                "predicted": 0.78,
+                "details": "❌ Comparando sal_g. Esperado: 0.78, Obtenido: 0.78, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 24477,
+        "url": "https://tienda.mercadona.es/product/24477",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "estandar|caro",
+                "predicted": "muy caro",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: estandar|caro, Obtenido: 'muy caro'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "marisco, moluscos, pescado, sulfitos",
+                "predicted": "marisco, sulfitos, moluscos, pescado",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 326,
+                "predicted": 326,
+                "details": "❌ Comparando energia_kj. Esperado: 326.0, Obtenido: 326.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 77,
+                "predicted": 77,
+                "details": "❌ Comparando energia_kcal. Esperado: 77.0, Obtenido: 77.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.9,
+                "predicted": 0.9,
+                "details": "❌ Comparando grasas_g. Esperado: 0.9, Obtenido: 0.9, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.1,
+                "predicted": 0.1,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.1, Obtenido: 0.1, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.0,
+                "predicted": 0.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 0.0, Obtenido: 0.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.0,
+                "predicted": 0.0,
+                "details": "❌ Comparando azucar_g. Esperado: 0.0, Obtenido: 0.0, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 17.2,
+                "predicted": 17.2,
+                "details": "❌ Comparando proteina_g. Esperado: 17.2, Obtenido: 17.2, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.35,
+                "predicted": 0.35,
+                "details": "❌ Comparando sal_g. Esperado: 0.35, Obtenido: 0.35, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 84629,
+        "url": "https://tienda.mercadona.es/product/84629",
+        "comparisons": {
+            "marca": {
+                "passed": false,
+                "invalid": true,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando marca. Esperado: 'None', Obtenido: 'None'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "barato",
+                "predicted": "estandar",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: barato, Obtenido: 'estandar'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": false,
+                "precision": 1.0,
+                "recall": 0.7272727272727273,
+                "truth": " gluten, lactosa, sesamo, frutos de cascara, soja, sulfitos, moluscos, pescado, mostaza, cacahuete, huevo",
+                "predicted": "gluten, lactosa, huevo, mostaza, soja, sesamo, cacahuete, frutos de cascara",
+                "details": "❌ Comparando alergenos. Faltan: {'pescado', 'sulfitos', 'moluscos'} | Sobran: set(), Precision: 1.0, Recall: 0.7272727272727273"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 2097,
+                "predicted": 2097,
+                "details": "❌ Comparando energia_kj. Esperado: 2097.0, Obtenido: 2097.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 503,
+                "predicted": 503,
+                "details": "❌ Comparando energia_kcal. Esperado: 503.0, Obtenido: 503.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 31.0,
+                "predicted": 31.0,
+                "details": "❌ Comparando grasas_g. Esperado: 31.0, Obtenido: 31.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 21.0,
+                "predicted": 21.0,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 21.0, Obtenido: 21.0, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 48.0,
+                "predicted": 48.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 48.0, Obtenido: 48.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 7.3,
+                "predicted": 7.3,
+                "details": "❌ Comparando azucar_g. Esperado: 7.3, Obtenido: 7.3, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 7.9,
+                "predicted": 7.9,
+                "details": "❌ Comparando proteina_g. Esperado: 7.9, Obtenido: 7.9, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.88,
+                "predicted": 0.88,
+                "details": "❌ Comparando sal_g. Esperado: 0.88, Obtenido: 0.88, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 14431,
+        "url": "https://tienda.mercadona.es/product/14431",
+        "comparisons": {
+            "marca": {
+                "passed": false,
+                "invalid": true,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando marca. Esperado: 'None', Obtenido: 'None'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "estandar ",
+                "predicted": "caro",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: estandar , Obtenido: 'caro'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": false,
+                "precision": 1.0,
+                "recall": 0.0,
+                "truth": "gluten, lactosa, soja, sesamo, mostaza",
+                "predicted": "",
+                "details": "❌ Comparando alergenos. Faltan: {'soja', 'lactosa', 'gluten', 'mostaza', 'sesamo'} | Sobran: set(), Precision: 1.0, Recall: 0.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1121,
+                "predicted": 1121,
+                "details": "❌ Comparando energia_kj. Esperado: 1121.0, Obtenido: 1121.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 265,
+                "predicted": 265,
+                "details": "❌ Comparando energia_kcal. Esperado: 265.0, Obtenido: 265.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3.5,
+                "predicted": 3.5,
+                "details": "❌ Comparando grasas_g. Esperado: 3.5, Obtenido: 3.5, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.4,
+                "predicted": 1.4,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 1.4, Obtenido: 1.4, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 48.0,
+                "predicted": 48.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 48.0, Obtenido: 48.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 6.0,
+                "predicted": 6.0,
+                "details": "❌ Comparando azucar_g. Esperado: 6.0, Obtenido: 6.0, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3.5,
+                "predicted": 3.5,
+                "details": "❌ Comparando fibra_g. Esperado: 3.5, Obtenido: 3.5, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 8.4,
+                "predicted": 8.4,
+                "details": "❌ Comparando proteina_g. Esperado: 8.4, Obtenido: 8.4, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.2,
+                "predicted": 1.2,
+                "details": "❌ Comparando sal_g. Esperado: 1.2, Obtenido: 1.2, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 21318,
+        "url": "https://tienda.mercadona.es/product/21318",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "barato",
+                "predicted": "estandar",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: barato, Obtenido: 'estandar'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "lactosa",
+                "predicted": "lactosa",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": false,
+                "precision": 0.0,
+                "recall": 0.0,
+                "truth": "bajo en azucar, bajo en grasa",
+                "predicted": "sin azucar anadido",
+                "details": "❌ Comparando atributos. Faltan: {'bajo en grasa', 'bajo en azucar'} | Sobran: {'sin azucar anadido'}, Precision: 0.0, Recall: 0.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 204,
+                "predicted": 204,
+                "details": "❌ Comparando energia_kj. Esperado: 204.0, Obtenido: 204.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 48,
+                "predicted": 48,
+                "details": "❌ Comparando energia_kcal. Esperado: 48.0, Obtenido: 48.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.1,
+                "predicted": 0.1,
+                "details": "❌ Comparando grasas_g. Esperado: 0.1, Obtenido: 0.1, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.0,
+                "predicted": 0.0,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.0, Obtenido: 0.0, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 7.7,
+                "predicted": 7.7,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 7.7, Obtenido: 7.7, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 5.5,
+                "predicted": 5.5,
+                "details": "❌ Comparando azucar_g. Esperado: 5.5, Obtenido: 5.5, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.3,
+                "predicted": 0.3,
+                "details": "❌ Comparando fibra_g. Esperado: 0.3, Obtenido: 0.3, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3.9,
+                "predicted": 3.9,
+                "details": "❌ Comparando proteina_g. Esperado: 3.9, Obtenido: 3.9, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.18,
+                "predicted": 0.18,
+                "details": "❌ Comparando sal_g. Esperado: 0.18, Obtenido: 0.18, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 21073,
+        "url": "https://tienda.mercadona.es/product/21073",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "barato",
+                "predicted": "estandar",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: barato, Obtenido: 'estandar'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "lactosa",
+                "predicted": "lactosa",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "bajo en grasa, alto en proteina",
+                "predicted": "bajo en grasa, alto en proteina",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 226,
+                "predicted": 226,
+                "details": "❌ Comparando energia_kj. Esperado: 226.0, Obtenido: 226.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 53,
+                "predicted": 53,
+                "details": "❌ Comparando energia_kcal. Esperado: 53.0, Obtenido: 53.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.5,
+                "predicted": 0.5,
+                "details": "❌ Comparando grasas_g. Esperado: 0.5, Obtenido: 0.5, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.1,
+                "predicted": 0.1,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.1, Obtenido: 0.1, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 5.0,
+                "predicted": 5.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 5.0, Obtenido: 5.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 4.6,
+                "predicted": 4.6,
+                "details": "❌ Comparando azucar_g. Esperado: 4.6, Obtenido: 4.6, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 8.3,
+                "predicted": 8.3,
+                "details": "❌ Comparando proteina_g. Esperado: 8.3, Obtenido: 8.3, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.1,
+                "predicted": 0.1,
+                "details": "❌ Comparando sal_g. Esperado: 0.1, Obtenido: 0.1, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 5044,
+        "url": "https://tienda.mercadona.es/product/5044",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "muy barato",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: muy barato, Obtenido: 'barato'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1462,
+                "predicted": 1462,
+                "details": "❌ Comparando energia_kj. Esperado: 1462.0, Obtenido: 1462.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 344,
+                "predicted": 344,
+                "details": "❌ Comparando energia_kcal. Esperado: 344.0, Obtenido: 344.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.0,
+                "predicted": 1.0,
+                "details": "❌ Comparando grasas_g. Esperado: 1.0, Obtenido: 1.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.2,
+                "predicted": 0.2,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.2, Obtenido: 0.2, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 75.0,
+                "predicted": 75.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 75.0, Obtenido: 75.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.5,
+                "predicted": 0.5,
+                "details": "❌ Comparando azucar_g. Esperado: 0.5, Obtenido: 0.5, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 8.2,
+                "predicted": 8.2,
+                "details": "❌ Comparando proteina_g. Esperado: 8.2, Obtenido: 8.2, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.01,
+                "predicted": 0.01,
+                "details": "❌ Comparando sal_g. Esperado: 0.01, Obtenido: 0.01, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 13926,
+        "url": "https://tienda.mercadona.es/product/13926",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Luengo",
+                "predicted": "Luengo",
+                "details": "❌ Comparando marca. Esperado: 'luengo', Obtenido: 'luengo'"
+            },
+            "precio_relativo": {
+                "passed": true,
+                "difference": 0,
+                "truth": "caro|muy caro",
+                "predicted": "muy caro",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: caro|muy caro, Obtenido: 'muy caro'. Diferencia: 0"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "soja",
+                "predicted": "soja",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": false,
+                "precision": 1.0,
+                "recall": 0.4,
+                "truth": "fuente de fibra, vegetariano, bajo en grasa, alto en proteina, vegano",
+                "predicted": "fuente de fibra, alto en proteina",
+                "details": "❌ Comparando atributos. Faltan: {'bajo en grasa', 'vegano', 'vegetariano'} | Sobran: set(), Precision: 1.0, Recall: 0.4"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1517,
+                "predicted": 1517,
+                "details": "❌ Comparando energia_kj. Esperado: 1517.0, Obtenido: 1517.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 361,
+                "predicted": 361,
+                "details": "❌ Comparando energia_kcal. Esperado: 361.0, Obtenido: 361.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 8.8,
+                "predicted": 8.8,
+                "details": "❌ Comparando grasas_g. Esperado: 8.8, Obtenido: 8.8, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.5,
+                "predicted": 1.5,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 1.5, Obtenido: 1.5, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 13.0,
+                "predicted": 13.0,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 13.0, Obtenido: 13.0, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 6.3,
+                "predicted": 6.3,
+                "details": "❌ Comparando azucar_g. Esperado: 6.3, Obtenido: 6.3, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 15.0,
+                "predicted": 15.0,
+                "details": "❌ Comparando fibra_g. Esperado: 15.0, Obtenido: 15.0, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 50.0,
+                "predicted": 50.0,
+                "details": "❌ Comparando proteina_g. Esperado: 50.0, Obtenido: 50.0, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.0,
+                "predicted": 0.0,
+                "details": "❌ Comparando sal_g. Esperado: 0.0, Obtenido: 0.0, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 26019,
+        "url": "https://tienda.mercadona.es/product/26019",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": true,
+                "difference": 0,
+                "truth": "barato|muy barato",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: barato|muy barato, Obtenido: 'barato'. Diferencia: 0"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "sulfitos",
+                "predicted": "sulfitos",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": false,
+                "precision": 0.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "sin gluten",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: {'sin gluten'}, Precision: 0.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 350,
+                "predicted": 350,
+                "details": "❌ Comparando energia_kj. Esperado: 350.0, Obtenido: 350.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 83,
+                "predicted": 83,
+                "details": "❌ Comparando energia_kcal. Esperado: 83.0, Obtenido: 83.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.4,
+                "predicted": 0.4,
+                "details": "❌ Comparando grasas_g. Esperado: 0.4, Obtenido: 0.4, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.1,
+                "predicted": 0.1,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 0.1, Obtenido: 0.1, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 10.7,
+                "predicted": 10.7,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 10.7, Obtenido: 10.7, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.8,
+                "predicted": 0.8,
+                "details": "❌ Comparando azucar_g. Esperado: 0.8, Obtenido: 0.8, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 5.8,
+                "predicted": 5.8,
+                "details": "❌ Comparando proteina_g. Esperado: 5.8, Obtenido: 5.8, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.8,
+                "predicted": 0.8,
+                "details": "❌ Comparando sal_g. Esperado: 0.8, Obtenido: 0.8, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 13204,
+        "url": "https://tienda.mercadona.es/product/13204",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Nesquik",
+                "predicted": "Nesquik",
+                "details": "❌ Comparando marca. Esperado: 'nesquik', Obtenido: 'nesquik'"
+            },
+            "precio_relativo": {
+                "passed": true,
+                "difference": 0,
+                "truth": "estandar|barato",
+                "predicted": "estandar",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: estandar|barato, Obtenido: 'estandar'. Diferencia: 0"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "soja",
+                "predicted": "soja",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1634,
+                "predicted": 1634,
+                "details": "❌ Comparando energia_kj. Esperado: 1634.0, Obtenido: 1634.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 386,
+                "predicted": 386,
+                "details": "❌ Comparando energia_kcal. Esperado: 386.0, Obtenido: 386.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3.6,
+                "predicted": 3.6,
+                "details": "❌ Comparando grasas_g. Esperado: 3.6, Obtenido: 3.6, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.6,
+                "predicted": 1.6,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 1.6, Obtenido: 1.6, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 78.9,
+                "predicted": 78.9,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 78.9, Obtenido: 78.9, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 75.1,
+                "predicted": 75.1,
+                "details": "❌ Comparando azucar_g. Esperado: 75.1, Obtenido: 75.1, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 7.7,
+                "predicted": 7.7,
+                "details": "❌ Comparando fibra_g. Esperado: 7.7, Obtenido: 7.7, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 5.1,
+                "predicted": 5.1,
+                "details": "❌ Comparando proteina_g. Esperado: 5.1, Obtenido: 5.1, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.41,
+                "predicted": 0.41,
+                "details": "❌ Comparando sal_g. Esperado: 0.41, Obtenido: 0.41, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 52672,
+        "url": "https://tienda.mercadona.es/product/52672",
+        "comparisons": {
+            "marca": {
+                "passed": false,
+                "invalid": true,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando marca. Esperado: 'None', Obtenido: 'None'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 2,
+                "truth": "estandar",
+                "predicted": "muy barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: estandar, Obtenido: 'muy barato'. Diferencia: 2"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "sulfitos",
+                "predicted": "sulfitos",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 905,
+                "predicted": 905,
+                "details": "❌ Comparando energia_kj. Esperado: 905.0, Obtenido: 905.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 216,
+                "predicted": 216,
+                "details": "❌ Comparando energia_kcal. Esperado: 216.0, Obtenido: 216.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 16.0,
+                "predicted": 16.0,
+                "details": "❌ Comparando grasas_g. Esperado: 16.0, Obtenido: 16.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 5.5,
+                "predicted": 5.5,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 5.5, Obtenido: 5.5, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3.5,
+                "predicted": 3.5,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 3.5, Obtenido: 3.5, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.9,
+                "predicted": 1.9,
+                "details": "❌ Comparando azucar_g. Esperado: 1.9, Obtenido: 1.9, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 15.0,
+                "predicted": 15.0,
+                "details": "❌ Comparando proteina_g. Esperado: 15.0, Obtenido: 15.0, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.4,
+                "predicted": 1.4,
+                "details": "❌ Comparando sal_g. Esperado: 1.4, Obtenido: 1.4, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 12562,
+        "url": "https://tienda.mercadona.es/product/12562",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Nestlé",
+                "predicted": "Nestlé",
+                "details": "❌ Comparando marca. Esperado: 'nestlé', Obtenido: 'nestlé'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 1,
+                "truth": "estandar",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: estandar, Obtenido: 'barato'. Diferencia: 1"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "lactosa, frutos de cascara",
+                "predicted": "lactosa, frutos de cascara",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": false,
+                "precision": 0.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "sin gluten",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: {'sin gluten'}, Precision: 0.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 2248,
+                "predicted": 2248,
+                "details": "❌ Comparando energia_kj. Esperado: 2248.0, Obtenido: 2248.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 538,
+                "predicted": 538,
+                "details": "❌ Comparando energia_kcal. Esperado: 538.0, Obtenido: 538.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 30.3,
+                "predicted": 30.3,
+                "details": "❌ Comparando grasas_g. Esperado: 30.3, Obtenido: 30.3, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 17.4,
+                "predicted": 17.4,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 17.4, Obtenido: 17.4, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 58.9,
+                "predicted": 58.9,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 58.9, Obtenido: 58.9, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 57.7,
+                "predicted": 57.7,
+                "details": "❌ Comparando azucar_g. Esperado: 57.7, Obtenido: 57.7, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 2.0,
+                "predicted": 2.0,
+                "details": "❌ Comparando fibra_g. Esperado: 2.0, Obtenido: 2.0, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 6.3,
+                "predicted": 6.3,
+                "details": "❌ Comparando proteina_g. Esperado: 6.3, Obtenido: 6.3, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.13,
+                "predicted": 0.13,
+                "details": "❌ Comparando sal_g. Esperado: 0.13, Obtenido: 0.13, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 17163,
+        "url": "https://tienda.mercadona.es/product/17163",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Hacendado",
+                "predicted": "Hacendado",
+                "details": "❌ Comparando marca. Esperado: 'hacendado', Obtenido: 'hacendado'"
+            },
+            "precio_relativo": {
+                "passed": false,
+                "difference": 2,
+                "truth": "caro|muy caro",
+                "predicted": "barato",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: caro|muy caro, Obtenido: 'barato'. Diferencia: 2"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 833,
+                "predicted": 833,
+                "details": "❌ Comparando energia_kj. Esperado: 833.0, Obtenido: 833.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 201,
+                "predicted": 201,
+                "details": "❌ Comparando energia_kcal. Esperado: 201.0, Obtenido: 201.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 15.0,
+                "predicted": 15.0,
+                "details": "❌ Comparando grasas_g. Esperado: 15.0, Obtenido: 15.0, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 2.1,
+                "predicted": 2.1,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 2.1, Obtenido: 2.1, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 14.3,
+                "predicted": 14.3,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 14.3, Obtenido: 14.3, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 12.5,
+                "predicted": 12.5,
+                "details": "❌ Comparando azucar_g. Esperado: 12.5, Obtenido: 12.5, Diferencia: 0.00"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.6,
+                "predicted": 1.6,
+                "details": "❌ Comparando proteina_g. Esperado: 1.6, Obtenido: 1.6, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.9,
+                "predicted": 0.9,
+                "details": "❌ Comparando sal_g. Esperado: 0.9, Obtenido: 0.9, Diferencia: 0.00"
+            }
+        }
+    },
+    {
+        "product_id": 10502,
+        "url": "https://tienda.mercadona.es/product/10502",
+        "comparisons": {
+            "marca": {
+                "passed": true,
+                "invalid": false,
+                "truth": "Asturiana",
+                "predicted": "Asturiana",
+                "details": "❌ Comparando marca. Esperado: 'asturiana', Obtenido: 'asturiana'"
+            },
+            "precio_relativo": {
+                "passed": true,
+                "difference": 0,
+                "truth": "estandar",
+                "predicted": "estandar",
+                "details": "❌ Comparando precio_relativo. Opciones válidas: estandar, Obtenido: 'estandar'. Diferencia: 0"
+            },
+            "alergenos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "lactosa",
+                "predicted": "lactosa",
+                "details": "❌ Comparando alergenos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "atributos": {
+                "passed": true,
+                "precision": 1.0,
+                "recall": 1.0,
+                "truth": "",
+                "predicted": "",
+                "details": "❌ Comparando atributos. Faltan: set() | Sobran: set(), Precision: 1.0, Recall: 1.0"
+            },
+            "energia_kj": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 194,
+                "predicted": 194,
+                "details": "❌ Comparando energia_kj. Esperado: 194.0, Obtenido: 194.0, Diferencia: 0.00"
+            },
+            "energia_kcal": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 46,
+                "predicted": 46,
+                "details": "❌ Comparando energia_kcal. Esperado: 46.0, Obtenido: 46.0, Diferencia: 0.00"
+            },
+            "grasas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.6,
+                "predicted": 1.6,
+                "details": "❌ Comparando grasas_g. Esperado: 1.6, Obtenido: 1.6, Diferencia: 0.00"
+            },
+            "grasas_saturadas_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 1.1,
+                "predicted": 1.1,
+                "details": "❌ Comparando grasas_saturadas_g. Esperado: 1.1, Obtenido: 1.1, Diferencia: 0.00"
+            },
+            "carbohidratos_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 4.7,
+                "predicted": 4.7,
+                "details": "❌ Comparando carbohidratos_g. Esperado: 4.7, Obtenido: 4.7, Diferencia: 0.00"
+            },
+            "azucar_g": {
+                "passed": false,
+                "difference": 0.5,
+                "truth": 4.2,
+                "predicted": 4.7,
+                "details": "❌ Comparando azucar_g. Esperado: 4.2, Obtenido: 4.7, Diferencia: 0.50"
+            },
+            "fibra_g": {
+                "passed": true,
+                "difference": 0,
+                "truth": null,
+                "predicted": null,
+                "details": "❌ Comparando fibra_g. Esperado: None, Obtenido: None, Diferencia: 0.00"
+            },
+            "proteina_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 3.2,
+                "predicted": 3.2,
+                "details": "❌ Comparando proteina_g. Esperado: 3.2, Obtenido: 3.2, Diferencia: 0.00"
+            },
+            "sal_g": {
+                "passed": true,
+                "difference": 0.0,
+                "truth": 0.1,
+                "predicted": 0.1,
+                "details": "❌ Comparando sal_g. Esperado: 0.1, Obtenido: 0.1, Diferencia: 0.00"
+            }
+        }
+    }
+]
